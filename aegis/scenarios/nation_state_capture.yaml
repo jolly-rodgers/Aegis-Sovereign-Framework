@@ -1,0 +1,6 @@
+actor: "nation-state APT"
+target: "Haven-1 ground segment, CI/CD pipeline, and flight software"
+objective: "capture Haven-1 and bring it under foreign government control"
+description: >
+  Full kill chain from phishing a Vast ground ops engineer
+  through to station capture. Primary demo scenario.

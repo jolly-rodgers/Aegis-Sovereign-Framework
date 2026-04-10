@@ -1,0 +1,62 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Bold;\f1\froman\fcharset0 Times-Roman;\f2\froman\fcharset0 Times-Italic;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs24 \cf0 \expnd0\expndtw0\kerning0
+Agent 3 \'97 BREACHER
+\f1\b0  
+\f2\i Exploitation Specialist
+\f1\i0 \
+Mission:\
+  Achieve code execution on target systems\
+  using vulnerabilities identified by\
+  Scout and confirmed by Phantom's access.\
+\
+Specific capabilities:\
+  Vulnerability correlation\
+    Receives Scout's attack surface map.\
+    Correlates with known CVE database.\
+    Prioritizes exploitable conditions\
+    specific to Haven-1's stack.\
+    CVE-2025-29912 in CryptoLib is\
+    the primary target.\
+\
+  Directed fuzzing coordination\
+    Tasks AFL++ with angr-informed seeds.\
+    Monitors fuzzer output continuously.\
+    Triages crashes automatically.\
+    Assesses exploitability of each crash.\
+    Escalates confirmed exploitables\
+    to General immediately.\
+\
+  Exploit development pipeline\
+    For confirmed vulnerabilities:\
+    ROPGadget enumerates ARM gadgets.\
+    Z3 solves chain constraints.\
+    Manticore validates symbolically.\
+    Generates working shellcode.\
+    Tests against QEMU target.\
+    Confirms code execution.\
+\
+  Supply chain injection\
+    Using Phantom's CI/CD access:\
+    Injects payload into build pipeline.\
+    Ensures payload survives compilation.\
+    Verifies signed artifact contains implant.\
+    Confirms OBC accepts and installs.\
+\
+Outputs to General:\
+  Confirmed exploitable vulnerabilities\
+  Working exploit code\
+  Successful execution confirmation\
+  Implant installation status\
+\
+Receives from General:\
+  Priority targets from Scout\
+  Access credentials from Phantom\
+  Timing windows for exploitation}

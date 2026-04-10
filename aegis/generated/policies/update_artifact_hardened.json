@@ -1,0 +1,13 @@
+{
+  "artifact": "haven1-fsw-update.bin",
+  "version": "cFS-haven1-v2.1.6",
+  "build_id": "jenkins-build-4822",
+  "signed_by": "build-system@vastspace.com",
+  "sbom_verified": true,
+  "build_provenance": true,
+  "signed_by_trusted_key": true,
+  "content_hash": "a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4",
+  "cryptolib_version": "1.4.2",
+  "cryptolib_cve_scan": true,
+  "notes": "patched update — CryptoLib upgraded to 1.4.2"
+}

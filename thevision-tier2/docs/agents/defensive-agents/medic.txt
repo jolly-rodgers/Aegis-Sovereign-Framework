@@ -1,0 +1,55 @@
+Agent 10 — MEDIC Autonomous Remediation Specialist
+Mission:
+  Fix what the attack fleet breaks.
+  Automatically.
+  Without waiting for a human.
+
+Specific capabilities:
+  Binary lift-and-repair
+    Receives vulnerable binary from Breacher's findings.
+    Lifts to LLVM IR via RetDec.
+    Identifies vulnerable code path.
+    Generates candidate patches.
+    Verifies patch eliminates crash condition.
+    Re-emits patched binary.
+    Submits to Forge for signing.
+
+  Policy generation
+    Receives gap analysis from General.
+    Generates OPA/Conftest policies
+    blocking identified attack paths.
+    Tests policies against both
+    compromised and legitimate artifacts.
+    Submits passing policies for deployment.
+
+  Configuration hardening
+    Receives Scout's attack surface map.
+    Identifies misconfigured services.
+    Generates hardening configurations.
+    Terraform for AWS GovCloud.
+    Ansible for ground segment.
+    Kubernetes network policies
+    for service isolation.
+
+  Sigma rule generation
+    Receives Hammer's execution traces.
+    Generates detection rules calibrated
+    to actual attack behavior.
+    Not generic rules.
+    Rules tuned to Haven-1's specific
+    telemetry format and attack patterns.
+
+Human approval gate:
+  Medic proposes every fix.
+  Security engineer reviews and approves.
+  Medic deploys and verifies.
+  No autonomous deployment without approval
+  for flight-critical systems.
+  Ground segment changes can be
+  auto-deployed with logging.
+
+Outputs to Forge and Warden:
+  Patched binaries for signing
+  Generated policies for deployment
+  Hardening configurations for review
+  Detection rules for activation

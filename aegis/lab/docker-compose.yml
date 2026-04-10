@@ -1,0 +1,79 @@
+services:
+
+  ground-identity:
+    build: ./ground-identity
+    container_name: ground-identity
+    ports:
+      - "8080:8080"
+    networks:
+      - vast-ground-network
+    environment:
+      - SESSION_SECRET=vast-dev-secret-2027
+
+  ground-pipeline:
+    build: ./ground-pipeline
+    container_name: ground-pipeline
+    ports:
+      - "8081:8081"
+    networks:
+      - vast-ground-network
+    depends_on:
+      - ground-identity
+    environment:
+      - SSO_URL=http://ground-identity:8080
+
+  ground-station:
+    build: ./ground-station
+    container_name: ground-station
+    ports:
+      - "8084:8084"
+    networks:
+      - vast-ground-network
+      - haven1-space-network
+    environment:
+      - OBC_URL=http://space-obc:8082
+
+  space-obc:
+    build: ./space-obc
+    container_name: space-obc
+    ports:
+      - "8082:8082"
+    networks:
+      - haven1-space-network
+    environment:
+      - UPLINK_PORT=8082
+      - CCSDS_APID=0x18
+
+  space-lifesupport:
+    build: ./space-lifesupport
+    container_name: space-lifesupport
+    ports:
+      - "8083:8083"
+    networks:
+      - haven1-space-network
+    environment:
+      - MODBUS_PORT=502
+      - O2_NOMINAL=20.9
+      - CO2_NOMINAL=0.4
+      - PRESSURE_NOMINAL=101.3
+
+  space-comms:
+    build: ./space-comms
+    container_name: space-comms
+    ports:
+      - "8085:8085"
+    networks:
+      - haven1-space-network
+      - vast-ground-network
+    depends_on:
+      - space-obc
+
+networks:
+  vast-ground-network:
+    driver: bridge
+    labels:
+      description: "Vast HQ ground segment — identity, CI/CD, ground station"
+  haven1-space-network:
+    driver: bridge
+    labels:
+      description: "Haven-1 space segment — OBC, life support, comms"

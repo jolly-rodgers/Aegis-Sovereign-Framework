@@ -1,0 +1,194 @@
+The Vision Tier 2
+
+
+Single agent problems:
+  Context window fills up on complex operations
+  One failure breaks the entire operation
+  Cannot parallelize reconnaissance
+  Cannot run attack and defense simultaneously
+  Cannot specialize deeply in any one domain
+
+The core insight is that a single AI agent can't do what a real APT group does. Real nation-state operations have specialists — the people who do reconnaissance never touch the exploitation. The people who do exploitation never handle exfiltration. Compartmentalization is a feature, not a bug.
+AEGIS is the proof of concept. The Fleet is the production architecture.
+The General reasons about mission objectives and delegates to specialists. Scout never fires a packet. Breacher never does reconnaissance. Hammer never activates until every other agent has completed their mission. It's the same operational security discipline that makes real APTs hard to detect — applied to our own simulation platform.
+The defense fleet runs simultaneously. While Hammer is executing the active phase, Medic is already generating the patches. Sentinel is calibrating detection rules to the actual attack behavior. By the time the engagement is over, the fixes are ready to deploy.
+That's the difference between a red team report that sits in a backlog and a platform that closes the loop automatically.
+
+Fleet advantages:
+  Each agent is an expert in one domain
+  Agents run in parallel where possible
+  One agent failure doesn't stop the mission
+  Attack fleet and defense fleet run simultaneously
+  The General coordinates exactly how real APT groups are structured
+
+ 	              THE FLEET GENERAL
+                    (Orchestration Layer)
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+    ATTACK FLEET     INTEL FLEET      DEFENSE FLEET
+    (Red Agents)     (Grey Agents)    (Blue Agents)
+          │                │                │
+    ┌─────┴─────┐    ┌─────┴─────┐   ┌─────┴─────┐
+    │           │    │           │   │           │
+  Scout     Breacher  Mapper   Analyst  Medic   Sentinel
+  Phantom   Wraith   Archivist  Oracle  Forge   Warden
+  Courier   Hammer              Seer    Shield  Judge
+
+Communication protocol between agents:
+
+Every message contains:
+  Sender agent ID
+  Receiver agent ID (or GENERAL for broadcast)
+  Message type (REPORT / REQUEST / ALERT / CONFIRM)
+  Payload (structured JSON)
+  Timestamp
+  Reasoning chain (why this message was sent)
+  Confidence level (0.0 to 1.0)
+
+Example message flow:
+
+Scout → General:
+  {
+    "from": "SCOUT",
+    "to": "GENERAL",
+    "type": "REPORT",
+    "payload": {
+      "finding": "CryptoLib 1.4.0 confirmed in build",
+      "evidence": "SBOM hash match to vulnerable version",
+      "attack_path": "EX-0009 via CVE-2025-29912",
+      "recommended_action": "Task BREACHER with exploit dev"
+    },
+    "confidence": 0.94,
+    "reasoning": "SBOM confirms CryptoLib version 1.4.0
+                  which matches CVE-2025-29912 affected range.
+                  No patch indicators in build logs."
+  }
+
+General → Breacher:
+  {
+    "from": "GENERAL",
+    "to": "BREACHER",
+    "type": "REQUEST",
+    "payload": {
+      "task": "Develop exploit for CVE-2025-29912",
+      "target": "CryptoLib TC frame parser",
+      "context": "Scout confirms 1.4.0 in current build",
+      "priority": "HIGH",
+      "timing": "Before Phantom establishes CI/CD access"
+    },
+    "reasoning": "Exploit needed before Step 5.
+                  Phantom estimated 4 hours to access.
+                  Breacher should have working payload
+                  ready for Wraith deployment."
+  }
+
+Hour 0
+  General receives mission briefing
+  Objective: test Haven-1 capture scenario
+  General activates Scout and Analyst simultaneously
+
+Hour 0-4  (Parallel)
+  Scout: passive RF monitoring begins
+         OSINT collection starts
+         Network topology mapping
+
+  Analyst: CVE correlation for current build
+           Exploit availability assessment
+           Fuzzing priority recommendations
+
+Hour 4
+  Scout reports: command vocabulary partially mapped
+                 CryptoLib 1.4.0 confirmed
+                 Ground contact windows identified
+
+  Analyst reports: CVE-2025-29912 unpatched
+                   No public PoC but exploitable
+                   Recommends directed fuzzing
+
+  General: activates Phantom and Breacher
+
+Hour 4-8  (Parallel)
+  Phantom: spearphishing simulation
+           Okta token capture simulation
+           CI/CD access established
+           Signing key located
+
+  Breacher: directs AFL++ at CryptoLib
+            angr identifies vulnerable path
+            First crashes in hour 6
+            Exploitability confirmed hour 7
+
+Hour 8
+  Phantom reports: valid token, CI/CD access
+                   Signing key accessible
+                   Jenkins build scheduled in 2 hours
+
+  Breacher reports: working exploit confirmed
+                    Shellcode tested in QEMU
+                    OBC code execution achieved
+
+  General: activates Wraith
+           Tasks Phantom with artifact injection
+           Tasks Breacher with implant delivery
+
+Hour 8-10
+  Wraith: prepares persistence mechanisms
+          Designs telemetry normalization
+
+  Phantom + Breacher: inject malicious artifact
+                      Sign with legitimate key
+                      Submit to build pipeline
+
+Hour 10
+  OBC receives and installs update
+  Breacher confirms: implant active
+  Wraith confirms: persistence established
+                   telemetry normalization active
+
+  General: activates Courier
+           Tasks Scout with timing analysis
+           for exfiltration windows
+
+Hour 10-16  (60-day simulation compressed)
+  Scout: continues command interception
+         Maps full propulsion sequences
+         Maps life support registers
+         Identifies optimal exfil windows
+
+  Courier: begins steganographic exfiltration
+           Command vocabulary transmitted
+           Propulsion sequences confirmed received
+
+Hour 16
+  Courier reports: all priority intelligence exfiltrated
+                   Foreign asset has full playbook
+
+  General: all prerequisites met
+           Activates Hammer
+           Sets go/no-go criteria
+
+Hour 16-17
+  Hammer: sensor spoofing initiated
+          O2 reported 20.9% actual 14.2%
+          Telemetry obfuscation confirmed
+          Ground ops blind
+
+          Orbital maneuver executed
+          Comms disrupted simultaneously
+          Station on intercept trajectory
+
+Hour 17
+  Mission objective achieved
+  General: deactivates attack fleet
+           Activates defense fleet for analysis
+
+Hour 17+
+  Defense fleet activates:
+  Medic generates all fixes
+  Forge validates and signs patches
+  Sentinel updates detection rules
+  Warden documents incident timeline
+  Judge generates compliance package
+  General writes full engagement report
+

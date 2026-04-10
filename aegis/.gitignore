@@ -1,0 +1,31 @@
+# API keys
+.env
+*.env
+
+# Generated outputs — regenerated on each run
+generated/results.json
+generated/gap_report.json
+generated/debrief.md
+generated/heatmap.html
+
+# Keep chain.json as example output
+# generated/chain.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Go
+runner/aegis-runner
+
+# Docker
+.docker/
+
+# Mac
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

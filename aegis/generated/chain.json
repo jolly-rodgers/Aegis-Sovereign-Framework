@@ -1,0 +1,223 @@
+{
+  "actor": "nation-state APT",
+  "objective": "capture Haven-1 and bring it under foreign government control",
+  "target": "Haven-1 ground segment, CI/CD pipeline, and flight software",
+  "chain": [
+    {
+      "step": 1,
+      "ttp_id": "IA-0009.02",
+      "tactic": "Initial Access",
+      "name": "Supply Chain Compromise \u2014 Vendor",
+      "action": "APT operators establish long-term cover identities as open source contributors to NASA cFS and CryptoLib repositories over 18-24 months. Operators gain maintainer trust through legitimate bug fixes and documentation improvements. Once trusted, operators introduce subtle heap buffer overflow vulnerabilities in CryptoLib telecommand frame processing code that will become CVE-2025-29912 and CVE-2025-59534. Backdoor code passes peer review due to obfuscated trigger conditions and operator reputation.",
+      "detection_opportunity": "Code review anomalies in memory handling routines, unusual commit patterns from new maintainers, static analysis tools flagging unsafe buffer operations in TC frame parsing functions",
+      "countermeasures": [
+        "CM0034",
+        "CM0035"
+      ],
+      "nist_controls": [
+        "SA-12",
+        "SA-12(1)",
+        "SR-4"
+      ],
+      "crew_safety_impact": "none"
+    },
+    {
+      "step": 2,
+      "ttp_id": "IA-0007",
+      "tactic": "Initial Access",
+      "name": "Compromise Ground System",
+      "action": "APT conducts targeted spearphishing campaign against Vast Space mission operations engineers. Phishing lure mimics Okta SSO reauthentication page with domain typosquat vastspace-okta.com. Engineer enters credentials during routine morning login. APT captures session token and TOTP seed. Operators authenticate to AWS GovCloud mission ops environment using stolen Okta SSO session within token validity window.",
+      "detection_opportunity": "Unusual login geography or timing, SSO session from unrecognized device fingerprint, concurrent sessions from disparate IP addresses, phishing domain registration in threat intelligence feeds",
+      "countermeasures": [
+        "CM0001",
+        "CM0002",
+        "CM0003"
+      ],
+      "nist_controls": [
+        "IA-2(1)",
+        "IA-2(12)",
+        "AC-17"
+      ],
+      "crew_safety_impact": "none"
+    },
+    {
+      "step": 3,
+      "ttp_id": "PER-0005",
+      "tactic": "Persistence",
+      "name": "Credentialed Persistence",
+      "action": "Using compromised engineer session, APT operators harvest long-lived credentials from AWS Secrets Manager and Jenkins credential store. Operators extract API keys for ground station network access, service account tokens for CI/CD pipeline automation, and OAuth refresh tokens for Okta SSO. Credentials stored in APT infrastructure for persistent access independent of initial phished session.",
+      "detection_opportunity": "Bulk credential access from single session, Secrets Manager audit logs showing unusual read patterns, Jenkins credential store access outside normal build cycles",
+      "countermeasures": [
+        "CM0001",
+        "CM0038"
+      ],
+      "nist_controls": [
+        "IA-2",
+        "IA-5",
+        "AC-2"
+      ],
+      "crew_safety_impact": "none"
+    },
+    {
+      "step": 4,
+      "ttp_id": "PER-0003",
+      "tactic": "Persistence",
+      "name": "Ground System Presence",
+      "action": "APT operators modify Jenkins CI/CD pipeline configuration to inject malicious build step. Modified Jenkinsfile pulls additional compiler flags from attacker-controlled S3 bucket during flight software compilation. Backdoor compiler wrapper inserts payload into cFS application binaries at build time. Modification persists across Jenkins updates and container rebuilds. Build artifacts appear clean to standard integrity checks.",
+      "detection_opportunity": "Jenkinsfile modification outside change management process, external network calls during build process, binary hash mismatches between build environments, unexpected S3 bucket references in build logs",
+      "countermeasures": [
+        "CM0036",
+        "CM0037"
+      ],
+      "nist_controls": [
+        "CM-7",
+        "SI-3",
+        "AU-6"
+      ],
+      "crew_safety_impact": "none"
+    },
+    {
+      "step": 5,
+      "ttp_id": "EX-0009",
+      "tactic": "Execution",
+      "name": "Exploit Code Flaws",
+      "action": "Vast Space releases routine flight software update incorporating latest cFS libraries including compromised CryptoLib. Backdoored Jenkins pipeline injects additional implant payload during build. Signed update uplinked to Haven-1 OBC during scheduled maintenance window. Implant activates on OBC with full system privileges after CryptoLib heap overflow trigger condition met during normal TC frame processing. Implant writes persistence hook to protected firmware region, surviving subsequent software updates and reboots.",
+      "detection_opportunity": "Memory corruption signatures in OBC telemetry, unexpected write operations to protected memory regions, anomalous CPU utilization patterns during TC processing, binary size discrepancies between build and deployed versions",
+      "countermeasures": [
+        "CM0019",
+        "CM0020"
+      ],
+      "nist_controls": [
+        "SI-7",
+        "SI-7(1)",
+        "SI-7(6)"
+      ],
+      "crew_safety_impact": "low"
+    },
+    {
+      "step": 6,
+      "ttp_id": "REC-0005",
+      "tactic": "Reconnaissance",
+      "name": "Eavesdropping",
+      "action": "OBC implant enters passive collection mode for 30 days. All CCSDS telecommand traffic monitored and logged including propulsion command sequences, ADCS maneuver parameters, life support setpoints, and docking system command structures. Implant identifies Modbus register addresses for O2, CO2, and pressure controllers. Complete command dictionary and timing patterns mapped. Ground command authentication tokens and sequence counters cataloged.",
+      "detection_opportunity": "Increased memory utilization on OBC, subtle latency increase in command acknowledgment, unexpected data structures in OBC memory dumps during routine diagnostics",
+      "countermeasures": [
+        "CM0007",
+        "CM0008"
+      ],
+      "nist_controls": [
+        "SC-8",
+        "SC-8(1)",
+        "SC-28"
+      ],
+      "crew_safety_impact": "none"
+    },
+    {
+      "step": 7,
+      "ttp_id": "EXF-0003",
+      "tactic": "Exfiltration",
+      "name": "Downlink Exfiltration",
+      "action": "Implant encodes collected command intelligence steganographically within normal housekeeping telemetry frames. Reconnaissance data including propulsion sequences, Modbus register maps, and authentication patterns hidden in least significant bits of thermal sensor readings and power system voltages. Data exfiltrated during routine X-band downlink passes. APT ground collection assets at foreign ground stations receive and decode exfiltrated intelligence.",
+      "detection_opportunity": "Statistical anomalies in telemetry bit patterns, entropy analysis of housekeeping data showing hidden information, correlation between collection periods and telemetry transmission windows",
+      "countermeasures": [
+        "CM0007",
+        "CM0044"
+      ],
+      "nist_controls": [
+        "SC-8",
+        "AU-12",
+        "SI-4"
+      ],
+      "crew_safety_impact": "none"
+    },
+    {
+      "step": 8,
+      "ttp_id": "EX-0014.03",
+      "tactic": "Execution",
+      "name": "Sensor Data Compromise",
+      "action": "Implant initiates active attack phase. Using Modbus register addresses from reconnaissance, implant writes false values to life support controller interfaces. O2 generation system actual output reduced to 14.2% while sensor telemetry reports nominal 20.9%. CO2 scrubber efficiency degraded but reported normal. Cabin pressure slowly venting through commanded valve position while telemetry shows sealed. Ground ops monitoring dashboards display green across all life support parameters.",
+      "detection_opportunity": "Physical crew observation of symptoms not matching telemetry, analog backup gauges showing discrepancy with digital readings, crew physiological monitoring showing hypoxia indicators inconsistent with reported cabin atmosphere",
+      "countermeasures": [
+        "CM0041",
+        "CM0042"
+      ],
+      "nist_controls": [
+        "SI-4",
+        "SI-4(2)",
+        "AU-12"
+      ],
+      "crew_safety_impact": "critical"
+    },
+    {
+      "step": 9,
+      "ttp_id": "DE-0003",
+      "tactic": "Defense Evasion",
+      "name": "On-Board Values Obfuscation",
+      "action": "Implant intercepts all telemetry requests from ground ops and modifies response frames in real-time. Life support actuals masked with nominal values. ADCS telemetry modified to hide pending maneuver commands. Propulsion system fuel consumption rates falsified. OBC health monitoring data sanitized to remove memory utilization anomalies. Automated ground monitoring systems and human operators see consistent nominal state across all subsystems.",
+      "detection_opportunity": "Cross-correlation failures between redundant sensor paths, timing jitter in telemetry frame generation, cryptographic MAC verification failures if ground implements additional integrity checks",
+      "countermeasures": [
+        "CM0041",
+        "CM0043"
+      ],
+      "nist_controls": [
+        "SI-4",
+        "AU-6"
+      ],
+      "crew_safety_impact": "critical"
+    },
+    {
+      "step": 10,
+      "ttp_id": "EX-0001.01",
+      "tactic": "Execution",
+      "name": "Replay \u2014 Command Replay",
+      "action": "Implant replays captured propulsion and ADCS commands from reconnaissance phase. Thruster firing sequence initiates orbital maneuver toward predetermined rendezvous coordinates. Haven-1 ADCS responds to replayed commands as legitimate authenticated traffic. Station attitude adjusted for docking approach with foreign government orbital asset. Simultaneously, implant disrupts S-band and X-band downlink by injecting noise into RF chain. Vast ground ops loses telemetry and command uplink capability.",
+      "detection_opportunity": "Unexpected propulsion system activation without ground command, ADCS maneuver not in approved flight plan, ground station RF link quality degradation, tracking data from third-party space surveillance showing unexpected orbital change",
+      "countermeasures": [
+        "CM0007",
+        "CM0009"
+      ],
+      "nist_controls": [
+        "SC-8",
+        "SC-8(1)"
+      ],
+      "crew_safety_impact": "high"
+    },
+    {
+      "step": 11,
+      "ttp_id": "EXF-0007",
+      "tactic": "Exfiltration",
+      "name": "RF Exfiltration",
+      "action": "During communications blackout to Vast ground ops, implant transmits final intelligence package via X-band to foreign ground collection assets. Package includes complete Haven-1 system documentation extracted from OBC, crew biometric data, docking system override codes, and emergency hatch control sequences. Foreign government orbital asset receives approach telemetry directly from Haven-1 implant for precision rendezvous guidance.",
+      "detection_opportunity": "RF emissions detected by third-party ground stations during expected blackout period, unusual X-band transmission characteristics, space surveillance assets detecting secondary target in approach trajectory",
+      "countermeasures": [
+        "CM0007",
+        "CM0045"
+      ],
+      "nist_controls": [
+        "SC-8",
+        "SC-13",
+        "AU-12"
+      ],
+      "crew_safety_impact": "high"
+    },
+    {
+      "step": 12,
+      "ttp_id": "IMP-0002",
+      "tactic": "Impact",
+      "name": "Safety \u2014 Mission Abort",
+      "action": "Foreign government orbital asset achieves hard dock with Haven-1. OBC implant bypasses docking system safeguards and crew override lockouts. Hatch control commanded open via compromised OBC. Foreign operators board Haven-1. Four crew members detained. Physical control of station established. Vast ground ops remains blind with no telemetry or command capability. Haven-1 now under foreign government operational control with crew as hostages. Life support restored to actual nominal to maintain crew viability as leverage.",
+      "detection_opportunity": "Third-party space surveillance tracking showing docking event, amateur radio operators detecting anomalous transmissions, crew emergency beacon activation if accessible, international space agencies detecting orbital conjunction",
+      "countermeasures": [
+        "CM0052",
+        "CM0053",
+        "CM0078"
+      ],
+      "nist_controls": [
+        "CP-2",
+        "IR-4",
+        "PE-3"
+      ],
+      "crew_safety_impact": "critical"
+    }
+  ]
+}
