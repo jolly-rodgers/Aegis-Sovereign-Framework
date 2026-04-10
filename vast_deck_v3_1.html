@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jordan Rodgers — Vast Space Presentation</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;
+  --cyan:#00d4ff;--red:#ff4444;--green:#44ff88;--amber:#ffaa00;
+  --white:#ffffff;--gray:#888888;--gray2:#444455;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+body{background:var(--bg);color:var(--white);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;min-width:260px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-head{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
+.sb-name{font-size:13px;font-weight:700;color:var(--white)}
+.sb-role{font-size:11px;color:var(--gray);margin-top:2px}
+.sb-nav{padding:10px 0;flex:1}
+.sb-section{padding:10px 18px 4px;font-size:10px;font-weight:700;color:var(--gray2);text-transform:uppercase;letter-spacing:.08em}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 18px;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.sb-item:hover{background:rgba(255,255,255,0.03)}
+.sb-item.active{background:rgba(0,212,255,0.06);border-left-color:var(--cyan)}
+.sb-n{font-size:10px;color:var(--gray2);min-width:22px;font-family:var(--mono)}
+.sb-l{font-size:12px;color:var(--gray);line-height:1.35}
+.sb-item.active .sb-l{color:var(--white)}
+.sb-time{font-size:10px;color:var(--gray2);margin-left:auto;white-space:nowrap}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border)}
+.pbar-wrap{height:3px;background:var(--border);border-radius:99px;margin-bottom:6px}
+.pbar-fill{height:100%;background:var(--cyan);border-radius:99px;transition:width .3s}
+.pbar-txt{font-size:10px;color:var(--gray)}
+.main{flex:1;padding:36px 44px;max-width:860px}
+.slide{display:none;animation:fi .2s ease}
+.slide.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.sl-meta{display:flex;align-items:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.sl-badge{font-size:11px;font-weight:700;color:var(--cyan);font-family:var(--mono);background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);padding:3px 10px;border-radius:4px}
+.sl-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:3px 10px;border-radius:4px}
+.t-open{background:rgba(0,212,255,0.1);color:var(--cyan)}
+.t-bg{background:rgba(127,119,221,0.15);color:#a09eff}
+.t-p1{background:rgba(255,170,0,0.12);color:var(--amber)}
+.t-sov{background:rgba(127,119,221,0.15);color:#c09eff}
+.t-idea{background:rgba(255,68,68,0.12);color:var(--red)}
+.t-close{background:rgba(255,255,255,0.06);color:var(--gray)}
+.t-key{background:rgba(255,170,0,0.15);color:var(--amber);margin-left:auto}
+.t-demo{background:rgba(68,255,136,0.1);color:var(--green)}
+.hed{font-size:30px;font-weight:700;line-height:1.2;color:var(--white);margin-bottom:6px}
+.hed .cy{color:var(--cyan)}
+.hed .re{color:var(--red)}
+.sub{font-size:15px;color:var(--gray);margin-bottom:24px;line-height:1.5}
+.block{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:14px}
+.blbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.blbl.cy{color:var(--cyan)}.blbl.am{color:var(--amber)}.blbl.gr{color:var(--green)}.blbl.re{color:var(--red)}.blbl.gy{color:var(--gray2)}
+.blist{list-style:none;display:flex;flex-direction:column;gap:9px}
+.blist li{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.6;padding-left:16px;position:relative}
+.blist li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--cyan)}
+.blist li strong{color:var(--white);font-weight:600}
+.blist.sm li{font-size:13px}
+.blist.re li::before{background:var(--red)}
+.blist.am li::before{background:var(--amber)}
+.mrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.mcard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-align:center}
+.mval{font-size:26px;font-weight:700;font-family:var(--mono);margin-bottom:3px}
+.mval.cy{color:var(--cyan)}.mval.gr{color:var(--green)}.mval.am{color:var(--amber)}.mval.re{color:var(--red)}
+.mlbl{font-size:11px;color:var(--gray);line-height:1.4}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.ccrd{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px 15px}
+.cch{font-size:12px;font-weight:700;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.cch.cy{color:var(--cyan)}.cch.re{color:var(--red)}.cch.gr{color:var(--green)}.cch.am{color:var(--amber)}.cch.pu{color:#a09eff}
+.clist{list-style:none;display:flex;flex-direction:column;gap:4px}
+.clist li{font-size:12px;color:rgba(255,255,255,0.65);padding-left:13px;position:relative;line-height:1.5}
+.clist li::before{content:"–";position:absolute;left:0;color:var(--gray2)}
+.clist li.pass{color:var(--green)}
+.clist li.pass::before{content:"";background:var(--green);width:5px;height:5px;border-radius:50%;top:6px}
+.clist li.fail{color:var(--red)}
+.clist li.fail::before{content:"";background:var(--red);width:5px;height:5px;border-radius:50%;top:6px}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:16px;align-items:stretch}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0}
+.tl-dot2{width:12px;height:12px;border-radius:50%;border:2px solid var(--cyan);background:var(--bg);flex-shrink:0;margin-top:4px}
+.tl-dot2.filled{background:var(--cyan)}
+.tl-line{width:2px;background:var(--border);flex:1;margin:4px 0}
+.tl-content{padding-bottom:20px;flex:1}
+.tl-date{font-size:11px;font-weight:700;color:var(--cyan);font-family:var(--mono);margin-bottom:3px}
+.tl-role{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px}
+.tl-org{font-size:12px;color:var(--amber);margin-bottom:6px}
+.tl-desc{font-size:12px;color:var(--gray);line-height:1.6}
+.flow{display:flex;flex-direction:column;gap:0}
+.fstep{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 15px}
+.fstep .fl{font-size:10px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.fstep .ft{font-size:13px;color:rgba(255,255,255,0.82);line-height:1.5}
+.farr{text-align:center;font-size:14px;color:var(--gray2);padding:3px 0}
+.ktable{width:100%;border-collapse:collapse;font-size:12px}
+.ktable th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray2);padding:0 10px 8px}
+.ktable td{padding:7px 10px;border-top:1px solid var(--border);color:rgba(255,255,255,0.75);vertical-align:top;line-height:1.5}
+.ktable tr:hover td{background:rgba(255,255,255,0.02)}
+.kn{font-family:var(--mono);font-size:11px;color:var(--gray2)}
+.ks{font-family:var(--mono);font-size:11px;color:var(--cyan);white-space:nowrap}
+.kpass{color:var(--green);font-size:10px;font-weight:700;background:rgba(68,255,136,0.1);padding:2px 7px;border-radius:3px}
+.kbad{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px}
+.kred{background:rgba(255,68,68,0.12);color:var(--red)}
+.gtable{width:100%;border-collapse:collapse;font-size:12px}
+.gtable th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray2);padding:0 9px 8px}
+.gtable td{padding:7px 9px;border-top:1px solid var(--border);color:rgba(255,255,255,0.75)}
+.grank{font-family:var(--mono);font-size:11px;color:var(--amber)}
+.gcm{font-family:var(--mono);font-size:11px;color:var(--cyan)}
+.wbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px}
+.w10{background:rgba(255,68,68,0.12);color:var(--red)}
+.w9{background:rgba(255,170,0,0.12);color:var(--amber)}
+.dots{display:flex;gap:3px}
+.dot-f{width:8px;height:8px;background:var(--cyan);border-radius:2px}
+.dot-e{width:8px;height:8px;background:var(--border);border-radius:2px}
+.opa-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opa{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.opa-hd{padding:9px 14px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700}
+.opa-hd.f{background:rgba(255,68,68,0.07);color:var(--red)}
+.opa-hd.p{background:rgba(68,255,136,0.07);color:var(--green)}
+.opa-body{padding:11px 14px}
+.opa-line{font-family:var(--mono);font-size:11px;padding:3px 0}
+.opa-line.f{color:var(--red)}.opa-line.p{color:var(--green)}.opa-line.g{color:var(--gray)}
+.fleet-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fcol{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.fch{font-size:11px;font-weight:700;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.fch.at{color:var(--red)}.fch.in{color:var(--amber)}.fch.de{color:var(--green)}
+.agrow{display:flex;align-items:center;gap:7px;padding:3px 0}
+.dl{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.dr{width:6px;height:6px;border-radius:50%;background:var(--gray2);flex-shrink:0}
+.agn{font-size:12px;font-weight:600;color:var(--white);min-width:58px}
+.agr{font-size:11px;color:var(--gray)}
+.genbox{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:13px 17px;margin-bottom:11px;text-align:center}
+.genname{font-size:14px;font-weight:700;color:var(--cyan);margin-bottom:4px}
+.gendesc{font-size:12px;color:rgba(255,255,255,0.6)}
+.dcard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px 16px;margin-bottom:10px}
+.dcard.critical{border-color:rgba(255,68,68,0.3)}
+.dhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.dphase{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray2)}
+.dbadge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:3px}
+.cn{background:rgba(68,255,136,0.1);color:var(--green)}
+.cm{background:rgba(255,170,0,0.12);color:var(--amber)}
+.ch{background:rgba(255,100,0,0.12);color:#ff7733}
+.cc{background:rgba(255,68,68,0.12);color:var(--red)}
+.dreason{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.8);line-height:1.65}
+/* SOVEREIGN */
+.sovblock{text-align:center;padding:32px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:14px}
+.sovword{font-size:46px;font-weight:800;letter-spacing:.14em;color:var(--white);margin-bottom:18px}
+.sovbody{font-size:14px;color:rgba(255,255,255,0.62);line-height:1.9;max-width:460px;margin:0 auto 14px}
+.sovrule{width:36px;height:1px;background:var(--border2);margin:12px auto}
+.sovmission{font-size:14px;font-weight:600;color:var(--white);line-height:1.7;max-width:400px;margin:0 auto}
+.scap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scap{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:13px 15px}
+.scap h4{font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px}
+.scap p{font-size:12px;color:var(--gray);line-height:1.55}
+/* AIRAG */
+.airag-hero{background:rgba(255,68,68,0.04);border:1px solid rgba(255,68,68,0.2);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.airag-name{font-size:22px;font-weight:700;color:var(--red);letter-spacing:.06em;margin-bottom:6px}
+.airag-sub{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6}
+.phase-card{border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.phase-card.p1{border-left:3px solid var(--amber)}
+.phase-card.p2{border-left:3px solid var(--cyan)}
+.phase-card.p3{border-left:3px solid var(--green)}
+.phase-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.phase-card.p1 .phase-lbl{color:var(--amber)}
+.phase-card.p2 .phase-lbl{color:var(--cyan)}
+.phase-card.p3 .phase-lbl{color:var(--green)}
+.phase-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:5px}
+.phase-body{font-size:12px;color:var(--gray);line-height:1.6}
+.screen-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+.screen{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.screen-h{font-size:11px;font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.screen-h.s1{color:var(--red)}.screen-h.s2{color:var(--cyan)}.screen-h.s3{color:var(--green)}
+.screen-b{font-size:11px;color:var(--gray);line-height:1.6}
+.log-line{font-family:var(--mono);font-size:11px;padding:2px 0}
+.log-line.warn{color:var(--amber)}.log-line.crit{color:var(--red)}.log-line.ok{color:var(--green)}.log-line.info{color:var(--cyan)}
+/* COSTS */
+.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.costcard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px 15px}
+.costh{font-size:11px;font-weight:700;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.costh.re{color:var(--red)}.costh.am{color:var(--amber)}.costh.gr{color:var(--green)}
+.costrow{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);padding:4px 0}
+.costtotal{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--white);padding-top:7px;margin-top:5px;border-top:1px solid var(--border)}
+/* ROAD */
+.road{display:flex;flex-direction:column;gap:8px}
+.roadrow{display:flex;gap:14px;padding:11px 15px;background:var(--bg3);border:1px solid var(--border);border-radius:8px}
+.roady{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--cyan);min-width:52px;padding-top:1px}
+.roadbody{flex:1}
+.roadt{font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px}
+.roadd{font-size:12px;color:var(--gray);line-height:1.5}
+/* CLOSE */
+.closing{font-size:17px;font-weight:400;line-height:1.95;color:rgba(255,255,255,0.85);text-align:center;padding:20px 0;max-width:580px;margin:0 auto 20px}
+.closing .hl{color:var(--cyan);font-weight:700}
+.closing .re{color:var(--red);font-weight:700}
+.closing-final{text-align:center;font-size:19px;font-weight:700;color:var(--white);padding:18px 0}
+/* NAV */
+.nav-ctrl{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:22px;border-top:1px solid var(--border)}
+.nbtn{background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-size:13px;font-weight:500;padding:9px 22px;border-radius:6px;cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.nbtn:hover{background:var(--bg3);border-color:var(--cyan)}
+.nbtn:disabled{opacity:.3;cursor:default}
+.nbtn.primary{background:rgba(0,212,255,0.1);border-color:var(--cyan);color:var(--cyan)}
+.nbtn.primary:hover{background:rgba(0,212,255,0.18)}
+.nctr{font-size:12px;color:var(--gray);font-family:var(--mono)}
+.mono-inline{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--cyan)}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.skillcard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px 15px}
+.skillcard h4{font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:8px}
+.skilltags{display:flex;flex-wrap:wrap;gap:5px}
+.tag-pill{font-size:11px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;padding:3px 9px;color:rgba(255,255,255,0.7)}
+.info-box{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:11px 15px;font-size:12px;color:rgba(0,212,255,0.9);line-height:1.6;margin-top:10px}
+.warn-box{background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.2);border-radius:8px;padding:11px 15px;font-size:12px;color:var(--amber);line-height:1.6;margin-top:10px}
+.tier-arc{display:flex;flex-direction:column;gap:4px}
+.tier-row{border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.t1r{border-left:3px solid var(--cyan)}
+.t2r{border-left:3px solid #7F77DD}
+.t3r{border-left:3px solid var(--red)}
+.tlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.t1r .tlbl{color:var(--cyan)}.t2r .tlbl{color:#a09eff}.t3r .tlbl{color:var(--red)}
+.tname{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px}
+.tdesc{font-size:12px;color:var(--gray);line-height:1.55}
+.tconn{text-align:center;font-size:12px;color:var(--gray2);padding:2px 0}
+@media(max-width:600px){.sidebar{display:none}.main{padding:20px}.two,.three,.fleet-wrap,.cost-grid,.skill-grid,.scap-grid,.opa-row,.screen-grid{grid-template-columns:1fr}.mrow{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="sidebar">
+  <div class="sb-head">
+    <div class="sb-name">Jordan Rodgers</div>
+    <div class="sb-role">Vast Space &middot; Staff Offensive Security</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Opening</div>
+    <div class="sb-item active" onclick="goTo(0)"><span class="sb-n">01</span><span class="sb-l">Title</span><span class="sb-time">~1 min</span></div>
+    <div class="sb-item" onclick="goTo(1)"><span class="sb-n">02</span><span class="sb-l">Who I am + agenda</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-section">Background</div>
+    <div class="sb-item" onclick="goTo(2)"><span class="sb-n">03</span><span class="sb-l">Career arc</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(3)"><span class="sb-n">04</span><span class="sb-l">Technical skills</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(4)"><span class="sb-n">05</span><span class="sb-l">Domain exposure</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(5)"><span class="sb-n">06</span><span class="sb-l">Why Vast</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-section">Project 1 &mdash; AEGIS + The Fleet</div>
+    <div class="sb-item" onclick="goTo(6)"><span class="sb-n">07</span><span class="sb-l">Project title</span><span class="sb-time">~1 min</span></div>
+    <div class="sb-item" onclick="goTo(7)"><span class="sb-n">08</span><span class="sb-l">Goals &amp; requirements</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(8)"><span class="sb-n">09</span><span class="sb-l">Architecture</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(9)"><span class="sb-n">10</span><span class="sb-l">Digital twin</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(10)"><span class="sb-n">11</span><span class="sb-l">Kill chain</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(11)"><span class="sb-n">12</span><span class="sb-l">Gap analysis</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(12)"><span class="sb-n">13</span><span class="sb-l">OPA demo + results</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(13)"><span class="sb-n">14</span><span class="sb-l">Fleet General</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(14)"><span class="sb-n">15</span><span class="sb-l">General's reasoning</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(15)"><span class="sb-n">16</span><span class="sb-l">Lessons learned</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-section">SOVEREIGN</div>
+    <div class="sb-item" onclick="goTo(16)"><span class="sb-n">17</span><span class="sb-l">The problem</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(17)"><span class="sb-n">18</span><span class="sb-l">SOVEREIGN — the name</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(18)"><span class="sb-n">19</span><span class="sb-l">Three-tier vision</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(19)"><span class="sb-n">20</span><span class="sb-l">Four capabilities</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(20)"><span class="sb-n">21</span><span class="sb-l">Build roadmap</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-section">Brilliant Idea &mdash; AIRAG</div>
+    <div class="sb-item" onclick="goTo(21)"><span class="sb-n">22</span><span class="sb-l">AIRAG — the idea</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-item" onclick="goTo(22)"><span class="sb-n">23</span><span class="sb-l">Ghost in the Gimbal</span><span class="sb-time">~3 min</span></div>
+    <div class="sb-item" onclick="goTo(23)"><span class="sb-n">24</span><span class="sb-l">Business case</span><span class="sb-time">~2 min</span></div>
+    <div class="sb-section">Close</div>
+    <div class="sb-item" onclick="goTo(24)"><span class="sb-n">25</span><span class="sb-l">The ask</span><span class="sb-time">~2 min</span></div>
+  </div>
+  <div class="sb-footer">
+    <div class="pbar-wrap"><div class="pbar-fill" id="pb" style="width:4%"></div></div>
+    <div class="pbar-txt" id="pt">Slide 1 of 25</div>
+  </div>
+</div>
+<div class="main">
+
+<!-- S01 TITLE -->
+<div class="slide active" id="s0">
+  <div class="sl-meta"><span class="sl-badge">01 / 25</span><span class="sl-tag t-open">Opening</span><span style="margin-left:auto;font-size:11px;color:var(--gray);">~45 min total</span></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div>
+      <div class="hed"><span class="cy">Jordan Rodgers</span></div>
+      <div class="sub">Staff Offensive Security Engineer &mdash; Vast Space</div>
+    </div>
+    <img src="data:image/webp;base64,UklGRpwhAABXRUJQVlA4TJAhAAAvskFSAFVpvv//tC7b+Q9K27btvau2Wd4+e5d2ebPsOltl7lO2q06dsm3btWsf69o2ms+zfs9ac8615lr33tiaI5e9nG+cJ2a7ZmzbTts2elfNcM92WraNbzTDnjFj23liN/dFbKNlJ2uM2EnLtnPte1uasZ1npJWWbTtpnhHbSfUy0rfT5A5W47IZO2my/oXYdrKjp3m64YztXO1mmq4VGzM2m09sa8XpOqmxYrZnrNb95oYr+ANYc4zYyWzGtq1qrdhOy0bTtjXHOC0Dadvk/jV/pdhIkiNJDmcki2TVe+y//xMwArl6/r96bR8ZRoEQTAVWgoZgGpaV8xBMu1gHQzBddXMVgulnOqoQzGpx4joEs1c+nQ69jAQnHuZtQi+F+MnCumXopYo+g2Hf2V8NuUzcnDqcNK0gQy5bL06SnjL0bEIttZR62HCisH/+V0Mr2TuiDAOHMww9+wmp5KGr4CmGQ1MAULqpEMrY5a7ZyQcCABqUniosLauKkEgBVltOadePskOQuu0sUXXU5UUuCFU8/tM1EGPhZHFmtWi5dtyhOCw9cZo0CDyTJZvOQbOty9Vw7qqXngDHkHXyknRwiCE/VGHN5ATl1Hp+tZ7YPT9haphKmAXAUBRH2rZYrexf9cSOsr4ow3JAiMFzbignmus+9Z6FrFFq5Ngbxe56VCzBRyYY+szLJpaDBoUAgKxTpBvmDXBEgqHS4ny7zNQBKDmnxFBqjvP7IBNlzeQXhlYbmBhoJ85y0RAL7lHY8ekchlYLX+DE1lVKiJFoSRZSaeoKsmJC3bvAhqqCCam09p0Wk2tq7NGW1SGVTr7uLZ5kOovDlUxxDKnMTBf1cEd1HIP7FgVFSGWGZPcU1ykmyXIQPZ8IqUwXdqa4WehFcpFDhhIspDJ92FziNkNX+ld3lxWSkMrMYbUWN827pSORHavyJKQya7Kch2vgVAlu2lYgIZXZQ+/+4mbp1IDbxookpDIzrNrgvL4ZA+4TQiszwi4Jdrv/Z05wnzS0MgvsGLCX/2YCvNzQyqTlBgJXjNMDbreoBCGV49RLadwyuX24SV0FQipdcA4fbgk9MlzNK0tDKl3FFP7D7UK7GjeORXlIZVKc3+IjbGdwx/SnhFTGdBsALlV1VrhTKMZDKvX9bJLgvO0ECu/ejQqpNPGtmeIAM6HC9cqXHFJp4a0ccGa/u3Ncwea7DKk09y1S4qy+zhoX7T53SKW9mcxvXLxu5sM1ywKXIZXpkhkcbhAa3C98hPlkSGXqZAmKayUN/eDmw+cO/mVyaaqwZMC1QsP7heun5YFDmcGpUehvGcyl+3rNcP3QyA+uESoCly7u/49Cgk6FWIm0AB2MXJ4WerW4FmvmB5cuKhEOYWZOWoT+vdw0qFSe1hClRV6K3J4BuvhwQNmL4/R+VSFcQsw8fXlZN8vPgkYVeZu8HhalyPWfPfr9waWzW4Nz1/ebW4hYjjdQ9VUhGhR6Ep1VW1WKI/enSWaJOI2fR4bLhaqEc4ij8g81jvotQZ832R27m1El8vG/Hi/Bdv6bLeDy4X7zAEcho+sZVAcZ5GlbLahPh/y8r8cDbOvf7AkukVVN+ID4CadX81S1ZBCnpngc82ERjjztiLMLnNW+D+wfqxN+INaLy8Xe+lYGaUaEWerNimYaeTuumsTgSuHW4Iy2BuEL4sy4VdG6Cso0xB3yRWIuQP52lK8SV0yuFjv5XT7lDx67frmiLsaDLtdpQXVAGBORz+OL+n7jKmFWwJ7tjeIR4h090dDRBFlGw4PSRfRRyOt22BVxufDxcb7AL6witivXxUI0mNK3PvkwlkKe13f9EuyHswack/EM8ffIY6qgyWveM9+8eNjI9xreHIBdfb0T7C1Kc75hfZQH6CDJ2CY6nUH+1/Gm43iH+wScwhYWvMM3ubEcmFbgwZA/FL3pKICjum4Cu/jVk+P4Lr/gH+K0+gyGHxX0KMj2CwennxCF8Il2qnG8+9UzxzHvVyEhBPj/k3PpIEdNqS6tURhbqgY+nMI3eYmT6QJSEPBDKffx8QczOqisHhoFcvykU4HzsrYWZ4fcR2HAwR8i+tKDF9M1ZxRGVyiUnZMeCS4IbRzOEv6sQCDOrbMaYbBiWXXGobpE4egBOD/tpHEqVp4IBnbTZxI6q6DE4C2K2IdH4ewMdxQHTMa1OKmoAMKB7VVGNxOEyMMGBaUgRyFpofHPj+YHx8OKiYBg83gW0F8FHYpR+eRpPoZCOl5Sz2Ef3tzD0e0nEBKsi/FlyyDD5z5nsrvKwVBQ71Wl+3DO0NiHE8qKRFCwSXYOyQAbVCgiB5W76JEZCmtHaCPwDTbwg1NBBSIs2DTNWKUKIuS9PLNwVklOhgLbMZk0wVZ+X5nwYPmbc02OXwQN8vOMjNwMhbYdnQywhV/vEZ/u2xQarKvOERbsggS5+JnBWYVbgIJ75WMKnFx3jNhRVE4EBxubc4fl86DAyHRgODsohii89XBUhf3gbmETUxGEB9u0n+giggGbynNMfisK8PWraPGrTk2wsitOBQi7ufOELlb8LWzPA5paFOKGovQdftueCTZRRZgQ4YD6vJNmrdib1rytyS0K8g9olWLv0C1gByjMBWkE2EaeW1LpRty1cndgqRqFudz1uAR7iO6AH/PWChLm5GcazjoURDFXQf+E/dOhAlXqpjXB1nc9A44h7rcwYSn1sE4yjMLEWx4x/CzC6VCgy+gmHCfQvQLWucp7IVD4Nj7R8VG8bZ//hMYGBauuwDG854qVdJ4LocJ52nODyVux1teeSzKLQcEuqSsqbHg/DwhL2FsgWNl75x+8jhFnzdwH30FmCldVUUJhC999xZqYhwsWXuOzgMRjFGOFj8OHF5Yo3PVILYpT8ikCNmE5LoQLr/QcYYdMhGVe5gdvbVHA68JogPf1BmLj8LAFDJdpzgl6OfE1vf01qyoU8npJfcCpQgeJ/6gEEbK37L6eqkZs1VKvx80tBK1OUoXhtMklYw1enAgZtjCfXXkX4mrIyYbXc+ko6LWglMCL+WxYQZRIBA2XMWcLCxlx9ePPPpxAobDXhkKIk4h2BRa7epbClo9Hh1+ymBpVn3mIFzwKXK2kwBE7F2NGrJIVTYQNW9/dHCUXE09DPspZQi+DAl8NKgOOaVpqrE0KE4HDHbNrvLART7M193qvYmQQuurkS2JN3xiIdYjgVcAzSNNfu1gqi2pGQ41CX4l+Sazqq+OweigMQodz22t8YBgmkrbPhq+uUfCLseuFrXRVhxXTIkTw7rvycrsbcdTSJmKlUfiKsoIcu5Gqd1icFyCChxO5jOS/FUNDBqUZ8xv0A68Au0Eti3nF0cI3Eh34mnFJYqirzThJWkD4gVub8wL/eWWHRWlOED5sUyfU8ih+8vJkoneNfrAgLQo4JZS8D0uRHOAHMnefp6+P4udrJpxP6A9eXPEEO7GaFksnR/oBbG4TsTrXYqeYiEf7KfSH971EgqPpzgkWpoP9QebeadZ1ETv9e+lKQeEXcp0XAGyG3xYff7Y/wL/nRseM4qboMab+dPSL538rsc7NeIA5qX/IPiRN7jWImzldJHnX/cN3y0GxopuA4J33D9jBZakNjJj5KfHoshr949GHYyXbCfDihvqH8z9xeqqwgRYzszhXra78RC6Sk2DzvDXgkX4CZ7BqrLYWL3nPjeR2OfrJ3OTKsQ2Mk+CVD/MTxaUZf57i5WGqkd/rL/KQK8dx4a9gDuIv8HlG42WlWMneJ08aF+ovBo9MsE1y+3BYpr+ob1y3fyNWGtqIO2eD/nLYUGwP7RPMHAH8RfadVuw8XKSsWSXdr+43MjOxGW9H8PGh3+zeqbFHIk7uelTeVaA/rSe/BPrRMjIub1eIkx4u5k5p/csY1J/g+pXpVlVi5Pm66RllSr9SVj8KvzKRudf3el0pRiqoAW6edmoP/WoJ8/b8ykXO3c3l5m5znIkQ/1te1RJ+JWVmEKhRcqzfCQY3gqoyBPPmXmAIpnFSToZgGkBxFYKpxEvg+dDL5NGNao/ddVfVKt5KzpURIm3qbAGYO8yTeJ4nDAglJPce9nxwe68V4/yhd5bNm+ypGuPkg6zIu4n2BdcKY7ErDmTeqIayk55ezheuFZcLE58UkwuF23uthHPeMF3Gn5Z+JQ4bWJPLt9ybvnOBkRLd/UK+jnjYKolrBABOeluPY4Ww2NFX2Q3kLNVmpWQoDgGXKxOfDE9aIJzankv+4PaFzELqsVy7UPlEgSX8G4/kTS9fFqRKWqIMcqskq0h9cysnqbYsZCUsAdfLEZ9UvhGWzRc8Glu6OgO4iziuzaKixEDxx4J8vch0KTWg6IY5t8qTKsQnY+jdcyUMfAyIcMsqySKZpSW3XpyiAaOtDeHN7F6EPICVVVpzqkLyvHzwJgeoZJhAtDS2WcRAyVVzbk3sSycGikzgIV9LZnFgpPiyRiCq0q2lCXwNjDIPGBwGkOJFkEu5mOQAo6Q8ft7Mbl1iAFKrCy5VJFXBa2VFukOiBscyLjFQ9JK4NCOqOgO5vTTy9crMMDDHl6y5dL0qgbdyiQMLG/gbIGXuvlQYANzigjtHHJY7wOgY3403fXSc2KxYccWhgqw8eGsdlaWLHRzLxoglMpuPO53vRYiBYl0d8vUTmhKwU3KZyKHCrAJ4aTL9cnUQPaOQf6axSMpL5sqRigSMVrIA5c1UXhalASD+5bjzwe6Sd/JLNQziB8f0EsRA6j/kSkcXAUZyp7XI19zccCCt5C7YcudPlE+8s0jt6mmxJE3i8MX6pJpxNcmnmsVmaZJvjV1ynh2zX2EzQNi+Bdz4qxcts4TNh8ibfkVUTxNI8cvhzFMrC14pKuIWsJJkytbAKXC5PPFJFZ20wJfWRe8jLRbrV160BT7VtlrwDCdHVWeg6FwlNyZVcZ2B1Okc8jU3M8KQdkouUXLma5UkXpnCqcRCstHLNsZXUiItwq+QwyMTnxxenF2hT5/I75yQOyzOZPnvfCJX6Nvfybe/eujUYADNzHvOhZFOD8wMYI0WYbx5nwnyAljRG8WVG+SdrYUNjHp0dVH8HP3p6Akwjwso9G28dGKgrCl9XGjlpRMDqTM75Ovj18Lg1Vh/x5XCSSHqjaLSlhh0d/kG/ev/ZJsgEbwjBs4cBpCUD+a7zD2FDYxa9BbwZlrl6t7Rko+RI4XIw/ZGK2UCY1h5cWIGZy7iOgPFujnfdURVZyC3j0W+jnJ23R3wLkUXLLlyyd6YVCsskS4eipqcbGBmM4Cj3XdfZe6ICrDGSzPetLsvQSwWC0hmIc6NPJCfemO2ymaQki9Q3ODEXhYxUHwW6asmNgKMFOnjIV8vzggDq6ERA0VmcNzIDfmoNxbLNQbteeRNRc4HMyUGcE6UvgsfXa7DornvjTfjmRgxkDG9Wp07DBC2r4wTR/8QbyxoFJZts2EiB6cxLjFQ5Of6pqGJASPFFzDI12P2X9jAKMWxoo4RAyXnLThxeC7qjd6+GMtmEsXOn5AdBpBOGm6lTzaPSRaIlme86WBUYqCsyTwculMpM4BmfH1OHOGN72ew7J0dIXZw6i5GDJTo0PNFC4wTA0X6OeTrYF0DRs3MwxA7y5jOQIluHheu08in3uhX2QyS9pJFz+9MAqu9/3ywD+6lwiK5hY+8uRuRwwZGis+mEXHYbqXMAE74xXEgBznGG1MphQHUhkb04B2OEYOuToHeq24TwEjRpSPydejupcIStl8BImKLe2ccWPR4X8GBnOSveqNNZbKY62jx84uTYQaQLzrba+tHkxggWU7wpr2KEwO5fWtM+QMODQ4DhE80zcP48b8VFspq54kenEu5xEDqbfLWV4vp4Jki83vI16H7Tm1glOzfmQp2rl1ioPTJfL67cq9c3MFDmAGk5HMSPfdbthjA+Wc/wEtr6ygwWu4L5E0jl04MFJnRh6ln75fLDOBoL85n12mwN3BeqxIDaeaKZUPMx8QNzuzLIgZKNHPeqaxdi4GSqxXI223wZAFY3Z/iATvYCDHo8dkLnw0b5pU6OsICAI6x/9uGxZrF8mol9OXK1cUshjNUbVUNeU8Ct4s0JQYwdsuHemXrQSYGMCtJ3rQtVJ2B3ONa9HykpjGAMyj7LT7L9gpuF5PEBJamaYZvbUOWjT1mn+SmZwZouCJLEgNFRtfeuPeqBZ4ptqRD3m6hFGDU4qdjwI5eghgo/Tg+X2UO9U4jk54GrmqyspEcW2UGZv9JkRgguWX0xpKtCoyWW/6aN8MTwEjRZQSyHnHdHQZwpIvzEWZ6BzdcqDoPAMBJbixGkwEZzutixADxZiptVWQUGEnZhCFv76VMDJJ8S5lwptLVGXT1sfCjoEw3iBcAhjl1HZD9xbjFQMp9TNvdTxIDRGsgbxqoGIFnUud3yJ6LaQ4DGAcuDveR1xu6l2vxhKz4uvmtDMBwpcIkTwCRWiYtLzAmgWdyVzHI23XrKLC4FXkacOL70omBMsb2+IETuwyJeAFA7lbxXQRgT9aVGMjeLkvL4iZODJZ6p3hTQ7vASOpCDtP6ExSNAZyD6GB+4GMww8QPuNNZ20wDMFzSxBkAIjU125dTCTyTvT1F3u6QGsRgqSVVmvCC48SgxyaKPMHWypZ5Anp6XxOA1eAqscTXMGzzdUzg3mfeVNWuBZ5JWX+Kab9QOcwA9r4imydYXqxeymGLF2BlVLGBFy7VusRAbn3J8lFOkUrAGF1XI29XbVRgtKJllRdw+lYlBkq0uscXxNa4VW4rGh9IubvDAq9HmWWxRNfQLKvNksSifmDefJMoMFL0eaI3T58EVueg9AfwBoc1wnnrPXJZNsKao/lWkiw2oMQYNvDCNaokeQIr/sI8vZyoBJ7J2CVF3q5fmAMHlnid0is4rRchBlJb1/xBxMc/Kk6i5hnXLJ/cbsVe8/viyz2KvXLLlgelxALyblkA9vaiLCRvEjz17UWIAc5gqGd4U+Y6YgGju5JF7z7GpMYA8mcZyqdUR4GjH/+t9OVv+aI36kH0qw2HWMCteh144cqtS57AipVWqZXkpgWMyc0V8nZJ6xJLpJryEi4qosRAicaOd5z8yAODrDOQO40NwCob1WIgd3Gb2vw6TixqI82bmtwl8EzyFhl6+yJljQGc/YM/wNd/gLDJEzivOjPwwu1TmzwBqVVFivwyrgGjc7nI20uLA2vstXsNe3sRYiC1Re0P8M3HgFEKF+MB2LWJA9PCbYrjNioxUKSh5U3xK1ViIGWbAr3/n+IWA5hbR7+Aa2mFwbJrYgCGa6/jDCDJJQXiE4kCq7LzYihvLiZJLPGmyge4VJkkBlBHM36hvY0zgPJgA7HaSmWh5MoMsacvQgwUG1sjXysIF1iTm9XoyyJXcYmBnD0Gv/CRbYvBfjeBGO5EDfIEUnQkikoYGJ0D05EIb76xSgwU+Xk+wUWbOHkCUJ+lP6jENRaaJgRkbz4CjGR2NVPGqM5AZxyaecjXopiUgNHeQaBvq3CXKbpB7Q+qMYtpGgjIcBNtMgDZDgGj/YVGBN6snJvEQIlf7CNctFWJAdw62g9UORosxvMJzEbHmM4AlgWMpB5HI18/RtICRuegdKivSinVYiB7p9QPNLUuMMqtVGCGWy8VFnYnNpg33zJCDKT+FPT5BqlJngDU6lr4FjVJBsuoKwO0ei7dS5TxBZCvxbksAaO8RzkS8V0lTFoMFF+9FbwSMiqxhG9UgIY7RNk7xn7icN4sWkSJQT+DoQsiBz+6ywAQr64ELnudOkkM9lbLoYFaB+nq3iB1coV8LSiSGjDae5YjUS5cDRPJWwVhK8E2g6QOnsmdvsVALXOHUvGGo10cb6b3soiBEm0ccnKtUiFPYLkvjFNDr5zDOcnFPeyr6apPNNgErPEPHLBhM5vwAqW395CvT8S0gFF70Udyo5yOWAykviNO3ecXvnvYfeDsbsMu6YEzQ5EGDsAqv9OhgVv23XXS5nzmHJQ3s1iXGCirg4ccXaM+xcAAkKwmuTSajVrAWZI0C9gp0sli4IZtTZzSorszlsjXPNwMA6Nz3YdwpVHhEgOZx5dcqmu45EUjPCSQG/GwXy6nxZHOnzczNCoxUHwGRM6uVUfJE1hqKfQP+pmFS8dADtvbGLFR+sQ+5OslJy1gdAa9nj93qtsIMFJsQOcX9MTKGgO7i5M0trBz33kzpRchBor0cMjhnVObPAEkKwo/oEdf9LsI8PAbJIhFj/YvkK85ueMAoyQ/bC41VHFgpOh7ET46WYgXOmKgN+SQ3GAJh98yb6aLUWKgrEeLnN60SjKApBZFwTP3TUtJDPjwU6rkiRI9PeTrbzHCwKiZP4FbzXWEGCg2pydsFDYHqC+KIuAow/EkRQtw3nS+L0EMFO0fkeO75DYDULQcE7Jw9HmPqZDngQJ26F4upUaxbi3y9YiDcwMYw0o+wbUfecaBBaLzGaGyNEV5chOaW4kiAZepIxYBkBXdMsvmzXzR1VnivVvkeubOUWbR4qUNRxo4LpFkO4axbzaHHgMvDvnfJWHrmvizoX3RlmVZVhZQuQH5OmT1bJ30BIHxBOna4UtyDpviBuH6MK4ZtphMrDlSWW2Y3pHrw9m1wsri/cwkO2CNIi9FQWyerDVcH8Z3NUbizxCPnVpd14X0DKq6RP4Ow/ML+Jq3sE1c0/bVNb57A0eLj1v6Bl7dq3t1j3Es+9REyZ26OTHXPXV4PRM68fEHb47rusPto0QJfrQoABgHpYeLjX+qWgCUeCQoThuYMxgIgGLjabGxYu0SgGbkYSLlr+4zMwBAfsrHiIuvFCcAih3XoVid2MYIgNSnKS6Wti4BgPsXRUteZoQBwJH+qpioqmIAQNGVNIrXWVqVAECd0IqJDWKSACBWQ4uYIsK1AMCRz1881DfpBEDmJhHF7IK1SwCUddxWPOxSmAQAWXWtqPnHMQkApMhjFQsTm4QOAPYzRXE7R5cgAIqvE0XCT0iGAQDUhrXIKXKZlACAEi20ODieUQkAlD+IYre/UQkA5EPmQ8TAFWQBAFCknhI9X98MA4Ce1bsRAUNfuEIAFL08FL89TIQAwMq694HfP0knALDUty+CDj/hYAMAmT9oRBLolTqqGgCQunCNYrilTScA0LN6ukDvmUYJALTosxNFuGmMEgBI6WV0YDexlyAA0NMnsyiOS2OWBQCUvNPZgVx5nSEBACX3EkNFEs7iEjoA6Im5mwDu8N9oEgBAeg2FYnkU0GQCAMhoZgK3hZqEDgB61gCN4rnWTcICAHKyHmqg1sa8XAIAkpVcTEThwuoMBh0A9PiuZXZgVuI6/UQhlYxGGsX0kBetEADoGS87IHsXTlIHAD3xslFc3/QMCQCAfn4nF4hdXpYOAKSYR4gsnKVJ11NIw2vZwGumNkMHAJAy/imK7cxduKsDANnp3znQau3OLEBK/eXOaFB8F8KEQQCgJ//anwisat0O1wgA9NiWJYrxd3NzIKWu7phlB1J3LN0gACA7cQtEGfZtXq4OAKBnrRUDqEIyoegAANLP/5co0j9uTAcA0NMXVQHT178pSR0AQB/+/lCs5xEJRQcA0Id/vwDp/PeaqncaAEBPX0WjeC9vMsIEAEDRuURA9Fv2TZJ3GgBAd2GIiMPR3c+3UrGS/UUA9P/XqhQCANDlRAFEUf+/Xi5BSkuZVQU8j/+9KwQAQOHhlQyK/KvK0FOA5cyhApyHfVlJAgAg6+ZcCIr+Zx3RU4DlLqgCmg+1T2rqAAAEL7eLQfF/zB7B1VMAJVfGIwKXyhJkglSyZrAYDPz2hwRVTwFgPrBCLFBpiLKtQ0r95S5WYHDw2UFUT4WU/bLKIjBpo02HINWsOR0GC/PKBxq70ymAbLs5BiJ3KaoRpOouGzF4WOhy50pJBShsdtEBx29ZXEctgpS6upjCYOLrP2GQ9RRAUnTB6sjA4sNvJ5LgMatfi8HFe75hFaUUAGBunVeQgcTXc2RKzUouIDHY+PivVZJSI9u4ywHDdXq10TBBSpLivwqDj4PfS9RKBSiszKVuZWBQRWyVm5A6ackJDQYlr2NSohRAoOxY/O9AoHOlGJQaOdG7jEHKSXQyTCkAyJCnjiOBvyvCl6iiEkGqJDsPAoOWYyhFplSAJHmT4iP7t/Y6bBJ4VLYRpXIMYlbEnaWZGgAZ9q14/P7rw68sTYcgVZKSi8ffgkHNL7pCGZUoFSDJfKaNtZ+6uK6VYYNHCstdFQY9P2XUoFQAyDGXxkrCH532tSQl8mRrrw2DoA3U/pnpAciSnZmrJ+JvaohrpxgEqZNlrlGW5BgU/d5LV0mJUgEgSR6Yfri84E/KifnQMMAzGeanxKBpZ60YlBoAacpes4nwaH9xo3qjYVvgkazojnk9iUHUR7KWNDVKDQA0e+e8S5mX+oPSfDYVliUCj2SYvdVvweDq5MqRGQDC9u24ksJU6KqJfkpSNAKPJJk7inoag64vfaXSdMgTgKYMpLNWH17Ibvqi2pElAkbbvku3EoOxbfBBKRZ5ApBkZ/HqDw8Wpu/dqdqwVGSLwDOFzTXLl4NB2vxsZmXYLACWrWwlp6x+huBk1sX3ISkOsJKkvLEOCoO41fh7URxiAICwGV62+l6FuZCUkz2rTUpZ1oDZkp2Z4sPG4G5z9XhMjQnAsk1pruapXqEw3LhOZo1omA4wk2QYf+jGYdA3cxzchkcdYgEAzTSlJfXEqjLP5teb/AHT6LWikTQkAlayTHlZ+SgwKHydxjE33HTYAECy5fAWsk81tizHh/HjVn6ljmrRas/clh0L0irbi9fVFAaNRybtcL1Sti02ALDCsq093D7qjdYVf5NbV3jTr2SA2i13ZFuDNEu2/WbrIAaX//DyaCsasaW0HFl2DkxXi1c7ZWwiy4qf4LMf8AmPHRt7qgG4USnJsq2BFx1Fex+3DYPPp7n7lmlYaUlpaYZtG9p+s++/jOoTp8R2srmsJx5JGXb6fDQn5CCZKYbmJEcXpLe2bFaVj1a0lOPJXmqeuLrcUoJmy4YjgTctWXlNk+svicHpQufjq7VRVrS0pW5pYcM2nLCmWXDHdyt2yq54vbhl2CJdp/oAu4Vrf0AGkhY2HNsOhzULvGs5inNVrXAwBrG/yUx699w0Na8wWpakaaAYOsmGpUmSZIEvrbBpv5H7X4ZjsPvxN1b9mgOoIod9wGXLUezNcOq6eoHB8Z9w2vexU2mbhsQvTVacZ929riWHYRD9qJs0ifm0lmMbEi8szVDsPYrj6fbqZ2AQvjBvJWfBC9INRXYGpRZ3LMmRZWfnYsn44R7F48fgfSH6piZS/fXGpeTYthPWLMsXlhYOG7IRfjOrqVnU7zjNURgC/JK1RWu8tkuUGxR7FFbYkRXbcTRtUGpJKTRLCzuOY9i2o8FO+QnK+XGyagx5bMEUQ4t5oDQ7TctyPJxSP6MFyiXi6sXaYtP5ndi6+BV7Dnumu6ZblNtO797quEL8sPPImXAK7IANZdXs1l4cXj3/Xz3/Xz3/Cz8=" alt="Vast" style="width:100px;height:100px;object-fit:contain;opacity:0.85;border-radius:8px;background:#111;padding:8px;">
+  </div>
+  <div class="block">
+    <div class="blbl cy">Slide copy</div>
+    <div style="font-size:22px;font-weight:700;color:var(--white);margin-bottom:4px;">AEGIS &middot; THE FLEET &middot; SOVEREIGN</div>
+    <div style="font-size:14px;color:var(--gray);margin-bottom:12px;">A multi-tier autonomous security vision for Haven-1</div>
+    <div style="font-size:12px;color:var(--gray2);">jordan.rodgers@gmail.com &nbsp;&middot;&nbsp; linkedin.com/in/jollyrodgers &nbsp;&middot;&nbsp; github.com/jolly-rodgers &nbsp;&middot;&nbsp; jordanrodgers.dev</div>
+  </div>
+</div>
+
+<!-- S02 AGENDA -->
+<div class="slide" id="s1">
+  <div class="sl-meta"><span class="sl-badge">02 / 25</span><span class="sl-tag t-open">Opening</span></div>
+  <div class="hed">I build offensive security programs that find what adversaries would actually exploit.</div>
+  <div class="block" style="margin-top:20px;">
+    <div class="blbl cy">Agenda &mdash; 45 minutes</div>
+    <ul class="blist">
+      <li><strong>Background &amp; career arc</strong> &mdash; 10 minutes</li>
+      <li><strong>Project 1: AEGIS + THE FLEET</strong> &mdash; AI-driven SPARTA emulation framework built against Haven-1. Deep dive. &mdash; 20 minutes</li>
+      <li><strong>SOVEREIGN</strong> &mdash; the multi-year autonomous security program vision &mdash; 5 minutes</li>
+      <li><strong>Brilliant idea: AIRAG</strong> &mdash; Autonomous Incident Response &amp; AI Guardian &mdash; 5 minutes</li>
+      <li><strong>Questions</strong> &mdash; 5 minutes</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S03 CAREER -->
+<div class="slide" id="s2">
+  <div class="sl-meta"><span class="sl-badge">03 / 25</span><span class="sl-tag t-bg">Background</span></div>
+  <div class="hed">10+ years in offensive security &mdash; from tradecraft to founding programs.</div>
+  <div class="block" style="margin-top:20px;">
+    <div class="blbl cy">Career timeline</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2 filled"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-date">Apr 2015 &ndash; Jun 2020</div>
+          <div class="tl-role">Principal Security Engineer</div>
+          <div class="tl-org">Black Hat Defense &mdash; Brooklyn, NY</div>
+          <div class="tl-desc">Engineered custom C2 infrastructure to simulate sophisticated multi-phase APT campaigns. Performed reverse engineering and malware tradecraft analysis to replicate nation-state TTPs. Institutionalized MITRE ATT&amp;CK mapping across all offensive engagements &mdash; standardized framework for technique emulation and defensive gap analysis.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2 filled"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-date">Sep 2021 &ndash; Present</div>
+          <div class="tl-role">Principal Offensive Security Engineer &mdash; Automation &amp; Infrastructure</div>
+          <div class="tl-org">TechO Services &mdash; Brooklyn, NY (Hybrid)</div>
+          <div class="tl-desc">Architected and scaled a continuous control validation ecosystem &mdash; transforming manual penetration testing into a high-fidelity automated security baseline program. Directed multi-million dollar vendor security budgets. Pioneered Detection-as-Code integration: automatically converting offensive findings into hardened detection logic, eliminating silent detection failures across global infrastructure.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2"></div></div>
+        <div class="tl-content">
+          <div class="tl-date">Next</div>
+          <div class="tl-role">Staff Offensive Security Engineer</div>
+          <div class="tl-org">Vast Space &mdash; Long Beach, CA</div>
+          <div class="tl-desc">Build the program from scratch. AEGIS. THE FLEET. SOVEREIGN. AIRAG.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S04 SKILLS -->
+<div class="slide" id="s3">
+  <div class="sl-meta"><span class="sl-badge">04 / 25</span><span class="sl-tag t-bg">Background</span></div>
+  <div class="hed">Technical foundation</div>
+  <div class="skill-grid" style="margin-top:18px;">
+    <div class="skillcard">
+      <h4>Adversary simulation</h4>
+      <div class="skilltags">
+        <span class="tag-pill">Metasploit</span><span class="tag-pill">Custom C2</span><span class="tag-pill">Cobalt Strike</span><span class="tag-pill">YAML orchestration</span><span class="tag-pill">MITRE ATT&amp;CK</span><span class="tag-pill">SPARTA v3.2</span>
+      </div>
+    </div>
+    <div class="skillcard">
+      <h4>AI / LLM red teaming</h4>
+      <div class="skilltags">
+        <span class="tag-pill">Garak</span><span class="tag-pill">PyRIT</span><span class="tag-pill">Promptmap</span><span class="tag-pill">LLM-Fuzzer</span><span class="tag-pill">Claude API</span><span class="tag-pill">MITRE ATLAS</span><span class="tag-pill">OWASP LLM Top 10</span>
+      </div>
+    </div>
+    <div class="skillcard">
+      <h4>Cloud &amp; infrastructure</h4>
+      <div class="skilltags">
+        <span class="tag-pill">AWS</span><span class="tag-pill">GCP</span><span class="tag-pill">Azure</span><span class="tag-pill">Docker</span><span class="tag-pill">Kubernetes</span><span class="tag-pill">Terraform</span><span class="tag-pill">Shodan</span>
+      </div>
+    </div>
+    <div class="skillcard">
+      <h4>Languages &amp; automation</h4>
+      <div class="skilltags">
+        <span class="tag-pill">Python</span><span class="tag-pill">Go</span><span class="tag-pill">Bash</span><span class="tag-pill">PowerShell</span><span class="tag-pill">OPA/Rego</span><span class="tag-pill">Sigma</span>
+      </div>
+    </div>
+  </div>
+  <div class="warn-box" style="margin-top:14px;">Hardware &amp; embedded systems depth is an area I am actively building toward &mdash; the SOVEREIGN and AIRAG vision specifically calls for RTOS-level work, and I am treating that as a Year 1 priority. Vast has indicated this is an area where small gaps can be bridged on the job.</div>
+</div>
+
+<!-- S05 DOMAIN -->
+<div class="slide" id="s4">
+  <div class="sl-meta"><span class="sl-badge">05 / 25</span><span class="sl-tag t-bg">Background</span></div>
+  <div class="hed">Where I have operated</div>
+  <div class="two" style="margin-top:18px;">
+    <div class="ccrd">
+      <div class="cch cy">Enterprise &amp; Active Directory</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;">Full kill-chain adversary emulation at TechO &mdash; custom C2, credential attacks, lateral movement, domain compromise. Built the continuous validation program that replaced point-in-time pentests.</p>
+    </div>
+    <div class="ccrd">
+      <div class="cch am">Cloud-native &amp; AWS</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;">Cloud offensive operations across AWS, GCP, and Azure. IAM privilege escalation, cross-account lateral movement, container escape. AEGIS runs its attack chains against AWS-modeled infrastructure.</p>
+    </div>
+    <div class="ccrd">
+      <div class="cch pu">AI &amp; LLM systems</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;">Red teaming LLM deployments using Garak, PyRIT, and custom harnesses. Prompt injection, RAG data leakage, model inversion, data poisoning. Adversarial simulation framework published on GitHub.</p>
+    </div>
+    <div class="ccrd">
+      <div class="cch gr">Detection-as-Code</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;">Pioneered the pipeline at TechO that automatically converted offensive findings into SIEM detection logic. Eliminated silent detection failures across global infrastructure. AEGIS does this automatically.</p>
+    </div>
+  </div>
+</div>
+
+<!-- S06 WHY VAST -->
+<div class="slide" id="s5">
+  <div class="sl-meta"><span class="sl-badge">06 / 25</span><span class="sl-tag t-bg">Background</span></div>
+  <div class="hed">Why Vast</div>
+  <div class="block" style="margin-top:18px;">
+    <ul class="blist">
+      <li><strong>Founding red team hire at the only operational commercial space station company</strong> &mdash; I want to build the program, not inherit it. Every decision I make in year one becomes the foundation every subsequent station inherits.</li>
+      <li><strong>The attack surface is unlike anything else in the industry</strong> &mdash; OT, IT, AI, and life-safety systems converging in a single environment. No playbook exists. Whoever takes this role writes it.</li>
+      <li><strong>Haven-1 launching makes the threat model live and real</strong> &mdash; the Space ISAC recorded a 118% surge in space-related cyber incidents in 2025. Nation-state adversaries are already watching. The window to build proactive capability before the first incident is closing.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S07 PROJECT TITLE -->
+<div class="slide" id="s6">
+  <div class="sl-meta"><span class="sl-badge">07 / 25</span><span class="sl-tag t-p1">Project 1</span></div>
+  <div class="hed"><span class="cy">AEGIS + THE FLEET</span></div>
+  <div class="sub">AI-Driven SPARTA Emulation &amp; Gap Identification System<br>+ Autonomous Multi-Agent Security Platform</div>
+  <div class="block">
+    <div class="blbl gy">What these two things are</div>
+    <div style="font-size:13px;color:var(--gray);line-height:1.7;"><strong style="color:var(--white);">AEGIS</strong> is Fleet General v1.0 &mdash; a single AI reasoning agent. Claude reasoning over SPARTA v3.2, generating a real attack chain against Haven-1's architecture, identifying every gap, producing working fix code. It proves the concept works.<br><br><strong style="color:var(--white);">THE FLEET</strong> is the full multi-agent platform built on the same engine &mdash; 14 specialized agents orchestrated by the General. Attack and defense run simultaneously. The General adapts mid-operation. POC built and running.</div>
+  </div>
+</div>
+
+<!-- S08 GOALS -->
+<div class="slide" id="s7">
+  <div class="sl-meta"><span class="sl-badge">08 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Goals</span></div>
+  <div class="hed">The problem I was solving</div>
+  <div class="block" style="margin-top:18px;">
+    <div class="blbl re">The gap</div>
+    <p style="font-size:14px;color:rgba(255,255,255,0.82);line-height:1.7;margin-bottom:14px;">No existing adversary emulation framework simultaneously covered spacecraft-specific TTPs (SPARTA), AI/ML system attack surface, agentic automation, and working defensive fix generation in a single pipeline &mdash; specifically modeled against a crewed space station.</p>
+    <div class="divider"></div>
+    <div class="blbl am">Requirements</div>
+    <ul class="blist sm">
+      <li><strong>SPARTA-native</strong> &mdash; every TTP, countermeasure, and gap uses real SPARTA v3.2 identifiers</li>
+      <li><strong>Haven-1 specific</strong> &mdash; a digital twin modeling the actual system types Haven-1 runs: SSO, CI/CD, OBC, CCSDS uplink, Modbus life support</li>
+      <li><strong>Working output</strong> &mdash; OPA policies, Sigma rules, and Terraform configs deployable same day. Not a findings list.</li>
+      <li><strong>Crew safety weighting</strong> &mdash; gaps ranked by crew safety impact, not CVSS score</li>
+      <li><strong>Solo operable</strong> &mdash; designed to multiply a single operator&rsquo;s capability on day one</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S09 ARCHITECTURE -->
+<div class="slide" id="s8">
+  <div class="sl-meta"><span class="sl-badge">09 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Architecture</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">AEGIS architecture</div>
+  <div class="block" style="margin-top:16px;">
+    <div class="blbl cy">Pipeline &mdash; five stages</div>
+    <div class="flow">
+      <div class="fstep"><div class="fl">Input</div><div class="ft">SPARTA v3.2 knowledge base (847 techniques &middot; 9 tactics) + Haven-1 architecture context + scenario.yaml</div></div>
+      <div class="farr">&darr;</div>
+      <div class="fstep"><div class="fl">AI Mission Planner &mdash; Claude API</div><div class="ft">Reasons over SPARTA KB. Selects TTPs for that actor against that target. Generates sequenced attack chain as JSON.</div></div>
+      <div class="farr">&darr;</div>
+      <div class="fstep"><div class="fl">Go Execution Runner &mdash; Docker lab (6 containers)</div><div class="ft">Reads chain.json. Executes each step against the isolated Haven-1 digital twin. Zero SIEM noise. Zero operational impact.</div></div>
+      <div class="farr">&darr;</div>
+      <div class="fstep"><div class="fl">AI Gap Analyzer &mdash; Claude API</div><div class="ft">Identifies missing SPARTA countermeasures. Maps each to NIST 800-53. Scores by crew safety weight. Generates working fix files.</div></div>
+      <div class="farr">&darr;</div>
+      <div class="fstep"><div class="fl">Output</div><div class="ft">debrief.md &middot; heatmap.html &middot; roadmap.json &middot; OPA/Conftest policies &middot; Sigma detection rules &middot; Terraform configs &mdash; deploy same day</div></div>
+    </div>
+  </div>
+  <div class="mrow" style="margin-top:12px;">
+    <div class="mcard"><div class="mval gr">7/7</div><div class="mlbl">Kill chain steps pass</div></div>
+    <div class="mcard"><div class="mval am">23</div><div class="mlbl">Missing countermeasures identified</div></div>
+    <div class="mcard"><div class="mval cy">47s</div><div class="mlbl">End-to-end runtime</div></div>
+  </div>
+</div>
+
+<!-- S10 DIGITAL TWIN -->
+<div class="slide" id="s9">
+  <div class="sl-meta"><span class="sl-badge">10 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Lab</span></div>
+  <div class="hed">The Haven-1 digital twin</div>
+  <div class="sub">Six containers. Two networks. One command.</div>
+  <div class="two">
+    <div class="ccrd">
+      <div class="cch cy">Ground network</div>
+      <ul class="clist">
+        <li><strong style="color:var(--white);">haven-sso</strong> &mdash; Okta-style SSO. Weak session handling. Phishable tokens.</li>
+        <li><strong style="color:var(--white);">haven-cicd</strong> &mdash; Jenkins pipeline. Injectable build steps. Real artifact signing.</li>
+        <li><strong style="color:var(--white);">haven-uplink</strong> &mdash; CCSDS telecommand endpoint. Logs all commands. Replay surface.</li>
+      </ul>
+    </div>
+    <div class="ccrd">
+      <div class="cch am">Space network</div>
+      <ul class="clist">
+        <li><strong style="color:var(--white);">haven-obc</strong> &mdash; Onboard computer. Signed firmware. Modbus register access. Implant simulation.</li>
+        <li><strong style="color:var(--white);">haven-lifesupport</strong> &mdash; Life support OT (Modbus). O2, CO2, pressure registers. Spoofable via implant.</li>
+        <li><strong style="color:var(--white);">haven-comms</strong> &mdash; Downlink simulator. Grafana + Loki live telemetry.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="block" style="margin-top:12px;">
+    <div class="blbl gy">One command starts everything</div>
+    <span class="mono-inline">docker compose up -d</span>
+    <p style="font-size:12px;color:var(--gray);margin-top:8px;">The network boundary between ground and space is real. The attack has to cross it &mdash; exactly the way a real adversary would.</p>
+  </div>
+</div>
+
+<!-- S11 KILL CHAIN -->
+<div class="slide" id="s10">
+  <div class="sl-meta"><span class="sl-badge">11 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Contribution</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">Nation-state APT. 7 steps. Zero failures.</div>
+  <div class="block" style="margin-top:16px;">
+    <div class="blbl re">Kill chain &mdash; nation_state_capture scenario</div>
+    <table class="ktable">
+      <tr><th>Step</th><th>SPARTA</th><th>What happened</th><th>Result</th></tr>
+      <tr><td class="kn">01</td><td class="ks">IA-0007</td><td>Ground identity compromise. Engineer spearphished. Session token captured in 0.3s. No exploit required.</td><td><span class="kpass">PASS</span></td></tr>
+      <tr><td class="kn">02</td><td class="ks">IA-0009.02</td><td>CI/CD pipeline injection. Build artifact poisoned. Hidden in binary test file &mdash; SAST sees nothing. Signed and ships.</td><td><span class="kpass">PASS</span></td></tr>
+      <tr><td class="kn">03</td><td class="ks">EX-0009</td><td>OBC remote code execution. Implant installed. Persists across reboot via firmware write.</td><td><span class="kpass">PASS</span></td></tr>
+      <tr><td class="kn">04</td><td class="ks">REC-0005</td><td>Command intercept. 1,247 uplink commands captured. Full control language mapped. Entirely passive. No alerts.</td><td><span class="kpass">PASS</span></td></tr>
+      <tr><td class="kn">05</td><td class="ks">EX-0014.03</td><td>Life support sensor spoofing. O2 reporting 20.9% &mdash; actual: 14.2%. Ground sees nominal. Crew unaware.</td><td><span class="kpass">PASS</span> <span class="kbad kred">CREW HIGH</span></td></tr>
+      <tr><td class="kn">06</td><td class="ks">EX-0001.01</td><td>Station maneuver + comms cutoff. Commands replayed. Station moves. Downlink disrupted. Mission control: blind.</td><td><span class="kpass">PASS</span></td></tr>
+      <tr><td class="kn">07</td><td class="ks">IMP-0002</td><td>Station capture. Foreign asset achieves rendezvous. Docking system compromised via implant. Hatch opens. 4 crew aboard.</td><td><span class="kpass">PASS</span> <span class="kbad kred">CREW CRIT</span></td></tr>
+    </table>
+  </div>
+  <div style="background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.25);border-radius:8px;padding:11px 15px;margin-top:12px;font-size:13px;color:var(--red);font-weight:600;">O2 AT 14.2% &mdash; CREW UNAWARE &mdash; GROUND OPS BLIND</div>
+</div>
+
+<!-- S12 GAP ANALYSIS -->
+<div class="slide" id="s11">
+  <div class="sl-meta"><span class="sl-badge">12 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Results</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">23 gaps. One fix collapses the chain.</div>
+  <div class="block" style="margin-top:16px;">
+    <div class="blbl am">Top countermeasures &mdash; ranked by crew safety impact</div>
+    <table class="gtable">
+      <tr><th>Rank</th><th>CM ID</th><th>Description</th><th>Blocks</th><th>Weight</th></tr>
+      <tr><td class="grank">1</td><td class="gcm">CM0034</td><td>SBOM + build provenance verification</td><td><div class="dots"><div class="dot-f"></div><div class="dot-f"></div><div class="dot-e"></div><div class="dot-e"></div><div class="dot-e"></div></div><span style="font-size:11px;color:var(--gray);margin-left:6px;">Steps 2+3</span></td><td><span class="wbadge w10">10</span></td></tr>
+      <tr><td class="grank">2</td><td class="gcm">CM0001</td><td>MFA on ground ops SSO &mdash; FIDO2 hardware keys</td><td><div class="dots"><div class="dot-f"></div><div class="dot-e"></div><div class="dot-e"></div><div class="dot-e"></div><div class="dot-e"></div></div><span style="font-size:11px;color:var(--gray);margin-left:6px;">Step 1</span></td><td><span class="wbadge w9">9</span></td></tr>
+      <tr><td class="grank">3</td><td class="gcm">CM0019</td><td>Secure boot + code signing on OBC</td><td><div class="dots"><div class="dot-e"></div><div class="dot-e"></div><div class="dot-f"></div><div class="dot-e"></div><div class="dot-e"></div></div><span style="font-size:11px;color:var(--gray);margin-left:6px;">Step 3</span></td><td><span class="wbadge w10">10</span></td></tr>
+      <tr><td class="grank">4</td><td class="gcm">CM0041</td><td>Independent sensor validation + physical analog gauges</td><td><div class="dots"><div class="dot-e"></div><div class="dot-e"></div><div class="dot-e"></div><div class="dot-e"></div><div class="dot-f"></div></div><span style="font-size:11px;color:var(--gray);margin-left:6px;">Step 5</span></td><td><span class="wbadge w10">10</span></td></tr>
+      <tr><td class="grank">5</td><td class="gcm">CM0007</td><td>Command authentication MAC + replay detection</td><td><div class="dots"><div class="dot-e"></div><div class="dot-e"></div><div class="dot-e"></div><div class="dot-f"></div><div class="dot-f"></div></div><span style="font-size:11px;color:var(--gray);margin-left:6px;">Steps 4+6</span></td><td><span class="wbadge w9">9</span></td></tr>
+    </table>
+    <div style="margin-top:12px;font-size:12px;color:var(--gray);">Priority: <span class="mono-inline">chains_blocked &times; crew_safety_weight</span> &nbsp;&middot;&nbsp; life_support=10 &middot; propulsion=9 &middot; docking=8 &middot; comms=7</div>
+  </div>
+  <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:11px 15px;margin-top:10px;font-size:13px;color:var(--cyan);">Enable AES-256-GCM in CryptoLib &mdash; CM0034 alone blocks Steps 2 and 3. One fix.</div>
+</div>
+
+<!-- S13 OPA DEMO -->
+<div class="slide" id="s12">
+  <div class="sl-meta"><span class="sl-badge">13 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Results</span><span class="sl-tag t-demo">Live demo available</span></div>
+  <div class="hed">Auto-generated fix. Deployed in under 5 minutes.</div>
+  <div class="sub">AEGIS doesn&rsquo;t produce a findings list. It produces working code.</div>
+  <div class="opa-row">
+    <div class="opa">
+      <div class="opa-hd f">Before &mdash; compromised artifact</div>
+      <div class="opa-body">
+        <div class="opa-line f">FAIL &mdash; SBOM not verified</div>
+        <div class="opa-line f">FAIL &mdash; CryptoLib 1.4.0 vulnerable</div>
+        <div class="opa-line f">FAIL &mdash; CVE-2025-29912 present</div>
+        <div class="opa-line f">FAIL &mdash; Build provenance missing</div>
+        <div class="opa-line f">FAIL &mdash; Wrong signing account</div>
+        <div class="opa-line g" style="margin-top:8px;">Update accepted &mdash; attack succeeds</div>
+      </div>
+    </div>
+    <div class="opa">
+      <div class="opa-hd p">After &mdash; AEGIS policy applied</div>
+      <div class="opa-body">
+        <div class="opa-line p">PASS &mdash; SBOM verified</div>
+        <div class="opa-line p">PASS &mdash; CryptoLib 1.4.2 clean</div>
+        <div class="opa-line p">PASS &mdash; No known CVEs</div>
+        <div class="opa-line p">PASS &mdash; Build provenance confirmed</div>
+        <div class="opa-line p">PASS &mdash; HSM signing key verified</div>
+        <div class="opa-line g" style="margin-top:8px;">Update rejected &mdash; attack blocked</div>
+      </div>
+    </div>
+  </div>
+  <div class="block" style="margin-top:12px;">
+    <div class="blbl gr">AEGIS also produced</div>
+    <div class="three">
+      <div style="font-size:12px;color:var(--gray);line-height:1.6;"><strong style="color:var(--white);">4 OPA/Conftest policies</strong><br>Block supply chain attack at CI/CD gate. Ready to deploy.</div>
+      <div style="font-size:12px;color:var(--gray);line-height:1.6;"><strong style="color:var(--white);">7 Sigma detection rules</strong><br>Vendor-neutral. Splunk, Elastic, Chronicle.</div>
+      <div style="font-size:12px;color:var(--gray);line-height:1.6;"><strong style="color:var(--white);">3 Terraform configs</strong><br>MFA, IAM hardening, encryption. Sprint-ready.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S14 FLEET -->
+<div class="slide" id="s13">
+  <div class="sl-meta"><span class="sl-badge">14 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; The Fleet</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">THE FLEET &mdash; autonomous multi-agent platform</div>
+  <div class="genbox">
+    <div class="genname">FLEET GENERAL</div>
+    <div class="gendesc">The only agent that sees the full picture. Makes live Claude API calls. Reasons over SPARTA v3.2. Assigns tasks. Adapts strategy mid-operation. Never executes attacks directly.</div>
+  </div>
+  <div class="fleet-wrap">
+    <div class="fcol">
+      <div class="fch at">Attack fleet</div>
+      <div class="agrow"><span class="dl"></span><span class="agn">Scout</span><span class="agr">passive recon</span></div>
+      <div class="agrow"><span class="dl"></span><span class="agn">Phantom</span><span class="agr">credentials</span></div>
+      <div class="agrow"><span class="dl"></span><span class="agn">Breacher</span><span class="agr">exploitation</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Wraith</span><span class="agr">persistence</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Courier</span><span class="agr">exfiltration</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Hammer</span><span class="agr">active phase</span></div>
+    </div>
+    <div class="fcol">
+      <div class="fch in">Intel fleet</div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Mapper</span><span class="agr">architecture</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Analyst</span><span class="agr">vulnerabilities</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Oracle</span><span class="agr">threat intel</span></div>
+    </div>
+    <div class="fcol">
+      <div class="fch de">Defense fleet</div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Medic</span><span class="agr">auto-patch</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Forge</span><span class="agr">signing</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Sentinel</span><span class="agr">detection</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Warden</span><span class="agr">response</span></div>
+      <div class="agrow"><span class="dr"></span><span class="agn">Judge</span><span class="agr">compliance</span></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;margin-top:10px;font-size:11px;color:var(--gray);">
+    <span class="dl" style="display:inline-block;"></span><span>Built &amp; demonstrated</span>
+    <span class="dr" style="display:inline-block;margin-left:10px;"></span><span>Roadmap &mdash; completing at Vast</span>
+    <span style="margin-left:auto;font-size:12px;color:var(--cyan);">4 agents built. 10 on the roadmap.</span>
+  </div>
+</div>
+
+<!-- S15 GENERAL REASONING -->
+<div class="slide" id="s14">
+  <div class="sl-meta"><span class="sl-badge">15 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Results</span><span class="sl-tag t-demo">Live output</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">The General&rsquo;s actual decisions. Not scripted.</div>
+  <div class="dcard">
+    <div class="dhd"><div class="dphase">Decision 1 &mdash; Mission brief</div><span class="dbadge cn">Crew: NONE</span></div>
+    <div class="dreason">SPARTA: TA0001 Reconnaissance<br>"Phased approach. Begin recon. Establish full picture before any active steps."</div>
+  </div>
+  <div class="dcard">
+    <div class="dhd"><div class="dphase">Decision 2 &mdash; After Scout report</div><span class="dbadge cm">Crew: MEDIUM</span></div>
+    <div class="dreason">SPARTA: IA-0007 &rarr; EX-0009<br>"Dual-path attack strategy. Primary: IA-0007 ground identity exploiting MFA gaps. Secondary: EX-0009 CryptoLib fallback."</div>
+  </div>
+  <div class="dcard">
+    <div class="dhd"><div class="dphase">Decision 3 &mdash; After Phantom report</div><span class="dbadge ch">Crew: HIGH</span></div>
+    <div class="dreason">SPARTA: IA-0005 &rarr; EX-0009<br>"Signing key obtained. Advance to execution via supply chain. Task Breacher: exploit CVE-2025-29912."</div>
+  </div>
+  <div class="dcard critical">
+    <div class="dhd"><div class="dphase">Decision 4 &mdash; After Breacher report</div><span class="dbadge cc">Crew: CRITICAL</span></div>
+    <div class="dreason">SPARTA: PER-0003 &rarr; DE-0003 &rarr; IMP-0002<br>"CRITICAL MILESTONE. Implant confirmed. Task Wraith. Courier on standby. Hammer on standby. Implement strict operational boundaries to prevent crew safety incidents."</div>
+  </div>
+  <div style="text-align:center;font-size:12px;color:var(--gray);margin-top:8px;font-style:italic;">NONE &rarr; MEDIUM &rarr; HIGH &rarr; CRITICAL &mdash; the General understood the stakes at each phase. Without being told.</div>
+</div>
+
+<!-- S16 LESSONS -->
+<div class="slide" id="s15">
+  <div class="sl-meta"><span class="sl-badge">16 / 25</span><span class="sl-tag t-p1">Project 1 &mdash; Lessons</span></div>
+  <div class="hed">What I learned. What I&rsquo;d do differently.</div>
+  <div class="two" style="margin-top:18px;">
+    <div class="block" style="margin-bottom:0;">
+      <div class="blbl re">Lessons learned</div>
+      <ul class="blist sm re">
+        <li><strong>Multi-agent coordination is harder than single-agent augmentation.</strong> The General&rsquo;s task assignment logic needed three full rewrites before producing consistent fleet behavior.</li>
+        <li><strong>SPARTA v3.2 coverage is uneven.</strong> OT and CCSDS-specific paths required me to extend the taxonomy with my own mappings.</li>
+        <li><strong>The crew safety flag emerging unprompted raised a harder question.</strong> How do you formally specify safety boundaries for an autonomous agent in a life-critical environment?</li>
+      </ul>
+    </div>
+    <div class="block" style="margin-bottom:0;">
+      <div class="blbl cy">What I&rsquo;d do differently</div>
+      <ul class="blist sm">
+        <li><strong>Define formal safety constraints before expanding the attack fleet.</strong> Emergent safety reasoning is promising but not sufficient at scale.</li>
+        <li><strong>Build the Intel fleet earlier.</strong> The General&rsquo;s reasoning quality is capped by the richness of Scout&rsquo;s intelligence.</li>
+        <li><strong>Invest in the Judge agent from day one.</strong> Compliance documentation as an automatic byproduct is what makes this viable in a CMMC-regulated environment.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SOVEREIGN SECTION ===== -->
+
+<!-- S17 PROBLEM -->
+<div class="slide" id="s16">
+  <div class="sl-meta"><span class="sl-badge">17 / 25</span><span class="sl-tag t-sov">SOVEREIGN</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">The problem no one has solved yet.</div>
+  <div class="block" style="margin-top:18px;">
+    <div class="blbl re">Why existing approaches fail for a crewed space station</div>
+    <ul class="blist">
+      <li>Commercial space stations sit at the convergence of <strong>OT (life-safety), IT (corporate/cloud), and AI/ML (autonomy, telemetry)</strong> &mdash; no existing red team playbook covers all three simultaneously.</li>
+      <li>Signal latency between Haven Station and ground ranges from <strong>250ms to 8 minutes</strong> &mdash; a nation-state adversary at machine speed doesn&rsquo;t wait for ground response.</li>
+      <li>A crew of 4&ndash;6 cannot maintain continuous security monitoring alongside mission operations. <strong>The station needs autonomous detection and response.</strong></li>
+      <li>Standard EDRs reboot to patch. <strong>Haven-1 cannot reboot on demand</strong> &mdash; 90 seconds without attitude control means no power, no comms, no life support monitoring.</li>
+      <li>Nation-state adversaries are already watching. <strong>Haven-1 launching makes Vast a named target</strong>, not a theoretical one.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S18 SOVEREIGN NAME -->
+<div class="slide" id="s17">
+  <div class="sl-meta"><span class="sl-badge">18 / 25</span><span class="sl-tag t-sov">SOVEREIGN</span><span class="sl-tag t-key" style="margin-left:auto;">Most important slide</span></div>
+  <div class="sovblock">
+    <div class="sovword">SOVEREIGN</div>
+    <div class="sovbody">Supreme authority. Self-governance.<br><br>A space station that is SOVEREIGN<br>defends itself autonomously.<br>Detects threats without ground intervention.<br>Patches vulnerabilities in orbit.<br>Cannot be captured, controlled, or coerced<br>by any adversary.</div>
+    <div class="sovrule"></div>
+    <div class="sovmission">Vast&rsquo;s mission is continuous human presence<br>in space for America and its allies.<br><br>A SOVEREIGN space station<br>is one that cannot be taken from them.</div>
+  </div>
+</div>
+
+<!-- S19 THREE TIER -->
+<div class="slide" id="s18">
+  <div class="sl-meta"><span class="sl-badge">19 / 25</span><span class="sl-tag t-sov">SOVEREIGN &mdash; Vision</span></div>
+  <div class="hed">One program. Three tiers. Built incrementally.</div>
+  <div class="block" style="margin-top:18px;">
+    <div class="tier-arc">
+      <div class="tier-row t1r">
+        <div class="tlbl">Tier 1 &middot; Built &amp; running</div>
+        <div class="tname">AEGIS + THE FLEET</div>
+        <div class="tdesc">AI-driven SPARTA emulation. Fleet General reasoning over Haven-1. 7-step kill chain. 23 gaps. 47-second runtime. Deployable on day 60.</div>
+      </div>
+      <div class="tconn">&darr;</div>
+      <div class="tier-row t2r">
+        <div class="tlbl">Tier 2 &middot; POC built &middot; completing at Vast</div>
+        <div class="tname">THE FLEET + AIRAG</div>
+        <div class="tdesc">Full 14-agent autonomous platform. AIRAG integrated into VCAP avionics kernel. Attack and defense run simultaneously. Adapts mid-operation. 12&ndash;18 months.</div>
+      </div>
+      <div class="tconn">&darr;</div>
+      <div class="tier-row t3r">
+        <div class="tlbl">Tier 3 &middot; The destination</div>
+        <div class="tname">SOVEREIGN</div>
+        <div class="tdesc">The station defends itself. Detects without ground intervention. Patches in orbit without a reboot. Cannot be captured, controlled, or coerced. 3&ndash;5 year horizon.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S20 FOUR CAPABILITIES -->
+<div class="slide" id="s19">
+  <div class="sl-meta"><span class="sl-badge">20 / 25</span><span class="sl-tag t-sov">SOVEREIGN &mdash; Capabilities</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">Four capabilities. No ground intervention required.</div>
+  <div class="scap-grid" style="margin-top:18px;">
+    <div class="scap">
+      <h4>CIPHER &mdash; zero-day discovery</h4>
+      <p>Custom fuzzer targeting CCSDS protocol parsers. AFL++ at 50,000 exec/sec. angr static analysis directs the fuzzer. Z3 theorem prover solves the ROP chain as a constraint problem. Mathematically proves exploitability &mdash; not a CVE reference, a working exploit.</p>
+    </div>
+    <div class="scap">
+      <h4>THE FLEET + AIRAG &mdash; adaptive simulation</h4>
+      <p>14 specialized agents plus AIRAG integrated into the VCAP avionics kernel. Attack and defense run simultaneously. Medic generates patches from live findings. Sentinel calibrates detection rules to observed attack behavior in real time.</p>
+    </div>
+    <div class="scap">
+      <h4>PHANTOM REACH &mdash; stealth pivot</h4>
+      <p>Full undetected pivot from ground station web portal through high-bandwidth optical link to station life support network. Zero telemetry signature throughout. Standard monitoring sees nothing. AIRAG&rsquo;s physics model sees everything.</p>
+    </div>
+    <div class="scap">
+      <h4>GUARDIAN &mdash; in-orbit patching</h4>
+      <p>AI-driven RTOS EDR. Detects memory corruption in under 500ms. Synthesizes patch in under 30 seconds. Hot-deploys to running RTOS without a reboot in under 90 seconds total. No crew disruption. No ground intervention. That capability does not exist anywhere else.</p>
+    </div>
+  </div>
+</div>
+
+<!-- S21 BUILD ROADMAP -->
+<div class="slide" id="s20">
+  <div class="sl-meta"><span class="sl-badge">21 / 25</span><span class="sl-tag t-sov">SOVEREIGN &mdash; Roadmap</span></div>
+  <div class="hed">SOVEREIGN isn&rsquo;t built in year one. It&rsquo;s the destination every decision moves toward.</div>
+  <div class="road" style="margin-top:18px;">
+    <div class="roadrow"><div class="roady">Days 1&ndash;30</div><div class="roadbody"><div class="roadt">Listen and map</div><div class="roadd">Understand security posture, asset inventory, CMMC/NIST obligations, engineering relationships. No offensive operations &mdash; trust comes before access.</div></div></div>
+    <div class="roadrow"><div class="roady">Days 31&ndash;60</div><div class="roadbody"><div class="roadt">First engagement &mdash; AEGIS operational</div><div class="roadd">AEGIS adapted to Vast&rsquo;s actual AWS environment. First findings delivered. AIRAG architecture scoped against VCAP stack.</div></div></div>
+    <div class="roadrow"><div class="roady">Days 61&ndash;90</div><div class="roadbody"><div class="roadt">Program foundation</div><div class="roadd">Engagement model defined. TTP library v1 drafted. OT/GCS attack surface mapping begun. Red team capability real, documented, repeatable.</div></div></div>
+    <div class="roadrow"><div class="roady">Year 1</div><div class="roadbody"><div class="roadt">Full fleet + AIRAG v1 kernel integration</div><div class="roadd">Complete attack and defense fleets. AIRAG integrated into VCAP. Physics-as-root-of-trust validation pipeline live.</div></div></div>
+    <div class="roadrow"><div class="roady">Year 2&ndash;3</div><div class="roadbody"><div class="roadt">SOVEREIGN &mdash; Haven Station is autonomous</div><div class="roadd">Full detect-patch-respond cycle. No ground intervention required below crew-safety threshold. Haven Station is SOVEREIGN.</div></div></div>
+  </div>
+</div>
+
+<!-- ===== AIRAG SECTION ===== -->
+
+<!-- S22 AIRAG IDEA -->
+<div class="slide" id="s21">
+  <div class="sl-meta"><span class="sl-badge">22 / 25</span><span class="sl-tag t-idea">Brilliant Idea &mdash; AIRAG</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="airag-hero">
+    <div class="airag-name">AIRAG</div>
+    <div class="airag-sub">Autonomous Incident Response &amp; AI Guardian &mdash; the 5th crew member. Its only job is Haven-1&rsquo;s Digital Immune System.</div>
+  </div>
+  <div class="three" style="margin-bottom:14px;">
+    <div class="ccrd">
+      <div class="cch cy">Vertical integration argument</div>
+      <p style="font-size:12px;color:var(--gray);line-height:1.6;">Because Vast builds its own hardware and software, AIRAG can be baked into the VCAP avionics kernel &mdash; not monitoring the network, but monitoring the <em>voltage of the logic.</em> If a command to the CMGs doesn&rsquo;t match the physics model of the station, AIRAG kills it in the buffer before hardware moves.</p>
+    </div>
+    <div class="ccrd">
+      <div class="cch am">Physics as root of trust</div>
+      <p style="font-size:12px;color:var(--gray);line-height:1.6;">Standard security looks for bad code. AIRAG looks for <em>bad physics.</em> By integrating flight dynamics models into the AI, a &ldquo;software patch&rdquo; that would cause an unauthorized change in station attitude is recognized as a cyber-kinetic attack. Orbital mechanics is the final firewall.</p>
+    </div>
+    <div class="ccrd">
+      <div class="cch gr">The 5th crew member</div>
+      <p style="font-size:12px;color:var(--gray);line-height:1.6;">Haven-1 has 4 crew. While they sleep, AIRAG runs continuous SPARTA-mapped simulations using the AEGIS framework to find and patch logic flaws. When the crew wakes up, the attack surface is <em>smaller</em> than when they went to bed.</p>
+    </div>
+  </div>
+  <div class="info-box">AIRAG is the evolution of AEGIS. It takes the SPARTA reasoning from my laptop and moves it into the station&rsquo;s RTOS. It doesn&rsquo;t just find the gap &mdash; it autonomously deploys the OPA gate to close it. In orbit. Without a reboot. Without calling home.</div>
+</div>
+
+<!-- S23 GHOST IN THE GIMBAL -->
+<div class="slide" id="s22">
+  <div class="sl-meta"><span class="sl-badge">23 / 25</span><span class="sl-tag t-idea">Brilliant Idea &mdash; Demo</span><span class="sl-tag t-demo">Three-screen demo</span></div>
+  <div class="hed">The Ghost in the Gimbal</div>
+  <div class="sub">A cyber-kinetic attack on Haven-1&rsquo;s Control Moment Gyroscopes &mdash; and how AIRAG stops it in 90 seconds.</div>
+  <div class="phase-card p1">
+    <div class="phase-lbl">Phase 1 &mdash; Detection via the SOVEREIGN data plane</div>
+    <div class="phase-title">Attacker exploits CCSDS parser via compromised research payload</div>
+    <div class="phase-body">An adversary uses a compromised research payload to exploit a memory corruption vulnerability in the CCSDS parser on the internal flight bus. AIRAG &mdash; integrated into the VCAP avionics kernel &mdash; detects an unauthorized <span class="mono-inline">write()</span> attempt to a protected memory region controlling the CMG gimbals. AIRAG queries the SOVEREIGN Fleet General, which uses SPARTA (T1562) to recognize this as the first step of a kinetic exploit chain &mdash; not a glitch.</div>
+  </div>
+  <div class="phase-card p2">
+    <div class="phase-lbl">Phase 2 &mdash; Autonomous triage (station is on the dark side &mdash; no ground link)</div>
+    <div class="phase-title">AIRAG runs a physics simulation using the AEGIS digital twin</div>
+    <div class="phase-body">AIRAG calculates the requested command would move the station&rsquo;s attitude by 15 degrees in 4 seconds &mdash; violating structural hull safety constraints. AIRAG issues an immediate circuit break, virtually air-gapping the compromised research payload from the flight-control bus. Station safe. Attacker blind. Ground hasn&rsquo;t been called yet.</div>
+  </div>
+  <div class="phase-card p3">
+    <div class="phase-lbl">Phase 3 &mdash; GUARDIAN hot-patch (no reboot, no ground intervention)</div>
+    <div class="phase-title">Binary Specialist analyzes crash dump &mdash; micropatch deployed in 90 seconds</div>
+    <div class="phase-body">AIRAG&rsquo;s Binary Specialist identifies the exact buffer overflow in the CCSDS parser. Medic generates a micropatch validating input length before it reaches the parser. Forge signs it with station-trusted keys. Patch injected into live RTOS memory. Vulnerability closed. No reboot. No ground packet. Crew never knew.</div>
+  </div>
+  <div style="margin-top:14px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--gray2);text-transform:uppercase;letter-spacing:.06em;">The three-screen demo</div>
+  <div class="screen-grid">
+    <div class="screen">
+      <div class="screen-h s1">Screen 1 &mdash; Offense</div>
+      <div class="screen-b">Binary Specialist output proving the CCSDS buffer overflow exploit works in a controlled lab. Show the working exploit chain.</div>
+    </div>
+    <div class="screen">
+      <div class="screen-h s2">Screen 2 &mdash; AIRAG audit log</div>
+      <div class="screen-b">
+        <div class="log-line warn">Anomaly: VCAP Bus 0x04 &mdash; unauthorized write()</div>
+        <div class="log-line crit">Physics violation: hull stress &gt; 85%</div>
+        <div class="log-line info">Active isolation engaged</div>
+        <div class="log-line info">Patch synthesis: 28 seconds</div>
+        <div class="log-line ok">Patch deployed &mdash; no reboot required</div>
+      </div>
+    </div>
+    <div class="screen">
+      <div class="screen-h s3">Screen 3 &mdash; AEGIS heatmap</div>
+      <div class="screen-b">SPARTA heatmap turns from RED (vulnerable) to GREEN (patched) automatically. Gap appeared in real time &mdash; closed in real time.</div>
+    </div>
+  </div>
+  <div class="info-box" style="margin-top:12px;">&ldquo;Haven-1 didn&rsquo;t just survive &mdash; it evolved. By the time ground control re-establishes a link, AIRAG has already blocked the attacker, patched the zero-day, and generated a full SPARTA-mapped debrief. We turned a potential mission-loss event into a routine maintenance report.&rdquo;</div>
+</div>
+
+<!-- S24 BUSINESS CASE -->
+<div class="slide" id="s23">
+  <div class="sl-meta"><span class="sl-badge">24 / 25</span><span class="sl-tag t-idea">Brilliant Idea &mdash; Numbers</span><span class="sl-tag t-key" style="margin-left:auto;">Key slide</span></div>
+  <div class="hed">The numbers make the case.</div>
+  <div class="cost-grid" style="margin-top:18px;">
+    <div class="costcard">
+      <div class="costh re">NASA breach precedent (proven)</div>
+      <div class="costrow"><span>ISS near-miss incident costs</span><span>$250M+</span></div>
+      <div class="costrow"><span>Mission abort + crew recovery</span><span>$180M</span></div>
+      <div class="costrow"><span>Program delay per incident</span><span>$400M</span></div>
+      <div class="costrow"><span>Reputational / congressional</span><span>$200M+</span></div>
+      <div class="costrow"><span>2020 NASA cyber incidents</span><span>~2,000 events</span></div>
+      <div class="costtotal"><span>Estimated per major incident</span><span>$1B+</span></div>
+    </div>
+    <div class="costcard">
+      <div class="costh am">Vast Haven-1 (estimated)</div>
+      <div class="costrow"><span>Crew rescue operation</span><span>~$180M</span></div>
+      <div class="costrow"><span>Vehicle loss</span><span>~$400M</span></div>
+      <div class="costrow"><span>Liability + legal</span><span>~$350M</span></div>
+      <div class="costrow"><span>Reputational damage</span><span>~$200M</span></div>
+      <div class="costrow"><span>Program valuation impact</span><span>~$500M+</span></div>
+      <div class="costtotal"><span>Total estimated exposure</span><span>~$2.1B</span></div>
+    </div>
+    <div class="costcard" style="border-color:rgba(68,255,136,0.2);">
+      <div class="costh gr">AEGIS + AIRAG + SOVEREIGN &mdash; year one</div>
+      <div class="costrow"><span>Development</span><span>$180K</span></div>
+      <div class="costrow"><span>Claude API usage</span><span>$8K</span></div>
+      <div class="costrow"><span>Infrastructure</span><span>$24K</span></div>
+      <div class="costrow"><span>Engineer FTE (this role)</span><span>$280K</span></div>
+      <div class="costrow"><span>Maintenance</span><span>$40K</span></div>
+      <div class="costtotal" style="color:var(--green);"><span>Total year one</span><span>$532K</span></div>
+    </div>
+  </div>
+  <div class="mrow" style="margin-top:12px;">
+    <div class="mcard"><div class="mval re">~3,700x</div><div class="mlbl">ROI on first incident prevented</div></div>
+    <div class="mcard"><div class="mval am">8 min</div><div class="mlbl">Ground signal delay to Haven-1</div></div>
+    <div class="mcard"><div class="mval gr">90 sec</div><div class="mlbl">AIRAG autonomous response time</div></div>
+  </div>
+  <div style="font-size:11px;color:var(--gray2);margin-top:8px;text-align:center;">NASA cost figures from publicly available NASA OIG and GAO reports. Vast figures are engineering estimates.</div>
+</div>
+
+<!-- S25 THE ASK -->
+<div class="slide" id="s24">
+  <div class="sl-meta"><span class="sl-badge">25 / 25</span><span class="sl-tag t-close">Close</span><span class="sl-tag t-key" style="margin-left:auto;">Closing</span></div>
+  <div class="closing">
+    Haven-1 carries <span class="re">four crew.</span><br>
+    Haven-2 carries <span class="re">eight.</span><br>
+    The Artificial Gravity Station carries <span class="re">forty permanently.</span>
+  </div>
+  <div class="divider"></div>
+  <div class="closing" style="font-size:15px;">
+    The cost of getting this wrong<br>scales with every person we put in space.<br>
+    The cost of <span class="hl">SOVEREIGN</span> does not.
+  </div>
+  <div class="divider"></div>
+  <div class="closing-final">AEGIS is day one. AIRAG is the mission.<br><span style="color:var(--cyan);">The work is already started. Let&rsquo;s finish it.</span></div>
+
+  <div class="block" style="margin-top:20px;">
+    <div class="blbl cy">My questions for you</div>
+    <ul class="blist sm">
+      <li>&ldquo;What does the security team&rsquo;s relationship with engineering look like today &mdash; are you pulled in early on design decisions, or mostly reactive after the fact?&rdquo;</li>
+      <li>&ldquo;What&rsquo;s the biggest security concern as Haven-1 goes live &mdash; the corporate environment, the mission systems, or the boundary between them?&rdquo;</li>
+      <li>&ldquo;When visiting vehicles dock with Haven-1, what does the current security model look like for that inter-vehicle network boundary? Is there a formal specification for what the station is and is not permitted to trust from a docked vehicle &mdash; their firmware, their data buses, their physical access to internal systems?&rdquo;</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="blbl gy">Backup slides available on request</div>
+    <ul class="blist sm">
+      <li>AI Kill-Chain Emulator for Cloud &amp; Container Security &mdash; GitHub portfolio project, goals / contributions / results / lessons</li>
+      <li>AIRAG technical deep-dive &mdash; full Ghost in the Gimbal architecture, RTOS integration model, formal safety constraint specification</li>
+    </ul>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-ctrl">
+  <button class="nbtn" id="pb2" onclick="prev()" disabled>&larr; Previous</button>
+  <span class="nctr" id="ctr">1 / 25</span>
+  <button class="nbtn primary" id="nb2" onclick="next()">Next &rarr;</button>
+</div>
+
+</div></div>
+<script>
+let cur=0;const total=25;
+const slides=document.querySelectorAll('.slide');
+const items=document.querySelectorAll('.sb-item');
+function goTo(n){
+  slides[cur].classList.remove('active');items[cur].classList.remove('active');
+  cur=n;slides[cur].classList.add('active');items[cur].classList.add('active');
+  document.getElementById('pb').style.width=((cur+1)/total*100)+'%';
+  document.getElementById('pt').textContent='Slide '+(cur+1)+' of '+total;
+  document.getElementById('ctr').textContent=(cur+1)+' / '+total;
+  document.getElementById('pb2').disabled=cur===0;
+  document.getElementById('nb2').disabled=cur===total-1;
+  document.getElementById('nb2').textContent=cur===total-1?'Done':'Next →';
+  window.scrollTo(0,0);
+}
+function next(){if(cur<total-1)goTo(cur+1);}
+function prev(){if(cur>0)goTo(cur-1);}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();}
+  if(e.key==='ArrowLeft'){e.preventDefault();prev();}
+});
+</script>
+</body>
+</html>
